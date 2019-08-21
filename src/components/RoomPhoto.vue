@@ -121,11 +121,11 @@ export default {
       },
       success: function(file, response) {
         var html = `<div class="col-sm-4 text-sm-center " id="js-section-${response.image_id}">
-                                <div class="image-room">
-                                    <img src="${file.dataURL}" alt="delete-booking.png">
-                                </div>
-                                <a class="js-remove-image image--remove" data-image-id="${response.image_id}">Remove</a>
-                            </div>`;
+    <div class="image-room">
+        <img src="${file.dataURL}" alt="delete-booking.png">
+    </div>
+    <a class="js-remove-image image--remove" data-image-id="${response.image_id}">Remove</a>
+</div>`;
         $(".photo-view > .row").append(html);
 
         $(".js-remove-image").click(function(e) {
@@ -133,9 +133,9 @@ export default {
           var imageId = e.target.dataset.imageId;
           $.ajax({
             type: "delete",
-            url: "/api/delete-image/" + imageId,
+            url: vm.$host_name_server + "/api/delete-image/" + imageId,
             headers: {
-              "X-CSRF-TOKEN": $('meta[name = "csrf-token"]').attr("content")
+              Authorization: `Bearer ${vm.$token}`
             },
             success: function(res) {
               $("#js-section-" + imageId).remove();
