@@ -7,12 +7,12 @@ import CKEditor from '@ckeditor/ckeditor5-vue';
 import BootstrapVue from 'bootstrap-vue';
 import money from 'v-money'
 import ToggleButton from 'vue-js-toggle-button';
-import VueApexCharts from 'vue-apexcharts';
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 import axios from "axios";
 import VueAxios from "vue-axios";
 import io from 'socket.io-client';
+import VueApexCharts from 'vue-apexcharts';
 const socket = io('http://localhost:3303');
 //
 // import Echo from 'laravel-echo';
@@ -42,7 +42,7 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 Vue.prototype.$host_name_server = 'http://localhost:8000/';
 Vue.prototype.$token = token
 Vue.prototype.$socket = socket;
-    //Overwriting messages errors
+//Overwriting messages errors
 const dictionary = {
     en: {
         attributes: {
@@ -78,6 +78,7 @@ Vue.component('todo-list-component', require('./components/TodoList.vue').defaul
 Vue.component('info-user-component', require('./components/InfoUser.vue').default);
 Vue.component('chart-booking', require('./components/ChartBooking.vue').default);
 Vue.component('state-overview', require('./components/StateOverview.vue').default);
+Vue.component('sent-notification', require('./components/SentNotification.vue').default);
 Vue.component('apexchart', VueApexCharts);
 /* eslint-disable no-new */
 new Vue({

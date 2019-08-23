@@ -8,11 +8,11 @@
           </span>
           <div class="info-box-content">
             <span class="info-box-text">Room</span>
-            <span class="info-box-number">450</span>
+            <span class="info-box-number">{{ datas.total_room }}</span>
             <div class="progress">
               <div class="progress-bar width-60"></div>
             </div>
-            <span class="progress-description">60% Increase in 28 Days</span>
+            <span class="progress-description">Number Of Room</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -26,11 +26,11 @@
           </span>
           <div class="info-box-content">
             <span class="info-box-text">New Booking</span>
-            <span class="info-box-number">155</span>
+            <span class="info-box-number">{{ datas.total_booking }}</span>
             <div class="progress">
               <div class="progress-bar width-40"></div>
             </div>
-            <span class="progress-description">40% Increase in 28 Days</span>
+            <span class="progress-description">Number of Booking In Month</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -44,11 +44,11 @@
           </span>
           <div class="info-box-content">
             <span class="info-box-text">User</span>
-            <span class="info-box-number">52</span>
+            <span class="info-box-number">{{ datas.total_user }}</span>
             <div class="progress">
               <div class="progress-bar width-80"></div>
             </div>
-            <span class="progress-description">80% Increase in 28 Days</span>
+            <span class="progress-description">Number Of People</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -62,12 +62,12 @@
           </span>
           <div class="info-box-content">
             <span class="info-box-text">Total Earning</span>
-            <span class="info-box-number">13,921</span>
-            <span>$</span>
+            <span class="info-box-number">{{ datas.total_earning_month }}</span>
+            <span>VND</span>
             <div class="progress">
               <div class="progress-bar width-60"></div>
             </div>
-            <span class="progress-description">60% Increase in 28 Days</span>
+            <span class="progress-description">Total Earing In Month</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -77,3 +77,29 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data: function() {
+    return {
+      datas:{
+
+
+      }
+    }
+  },
+  created() {
+    this.getDataStatistical();
+  },
+  methods: {
+    async getDataStatistical() {
+      try {
+        let response = await this.axios.get("api/statistical");
+        this.datas = response.data;
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  }
+};
+</script>

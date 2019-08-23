@@ -262,43 +262,35 @@ export default {
     this.getBookingById(this.booking_id);
   },
   methods: {
-    getBookingById(booking_id) {
-      this.axios
-        .get("api/bookings/" + booking_id)
-        .then(response => {
-          this.booking = response.data.booking;
-          this.status_booking.name = response.data.booking.status_booking;
-        })
-        .catch(error => {
-          console.error(error.response);
-        });
-    },
-    updateBooking(booking_id) {
-      this.status_booking.isEdit = false;
-      if (this.status_booking.name == this.booking.status_booking) {
-        console.log("nothing");
+    async getBookingById(booking_id) {
+      try {
+        let response = await this.axios.get("api/bookings/" + booking_id);
+        this.booking = response.data.booking;
+        this.status_booking.name = response.data.booking.status_booking;
+      } catch (error) {
+        console.error(error.response);
       }
-     else {
-        this.axios
-          .post(`api/bookings/${booking_id}/status-update`, {
+    },
+    async updateBooking(booking_id) {
+      try {
+        this.status_booking.isEdit = false;
+        if (this.status_booking.name == this.booking.status_booking) {
+          console.log("nothing");//
+        }
+        let status = await this.axios.post(`api/bookings/${booking_id}/status-update`, {
             status_name: this.status_booking.name
-          })
-          .then(response => {
-            if (this.status_booking.name == "completed") {
-              this.booking.room_peoples =
-                this.booking.room_peoples + this.booking.tenants;
-              return this.axios.post(`api/rooms/updatePeople`, {
-                room_id: this.booking.room_id,
-                number_people: this.booking.room_peoples
-              });
-            }
-          })
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error(error.response);
-          });
+        });
+        if (this.status_booking.name == "completed") {
+            this.$socket.emit("update-status-completed",  this.booking.booking_id);
+            //update people
+            this.booking.room_peoples = this.booking.room_peoples + this.booking.tenants;
+            this.axios.post(`api/rooms/updatePeople`, {
+              room_id: this.booking.room_id,
+              number_people: this.booking.room_peoples
+            });
+          }
+      } catch (error) {
+         console.error(error.response);
       }
     },
     deleteBooking(booking_id) {
@@ -352,7 +344,8 @@ export default {
     },
     asset(fileName) {
       return this.host_name + "/" + fileName;
-    }
+    },
+
   }
 };
 </script>
