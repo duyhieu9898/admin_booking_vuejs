@@ -132,7 +132,7 @@ export default {
         .post("/api/categories/", this.categoryCreate)
         .then(response => {
           //send notify
-          alertify.notify(`create success category with id is "${this.categoryCreate.id}"` , "success", 7);
+          alertify.notify(`CREATE category with id is "${this.categoryCreate.id}"` , "success", 7);
           //can not push category so id category defines the server side, id use for actions, should get all info from database
           this.getListcategories();
           //reset value
@@ -156,7 +156,7 @@ export default {
         }
         await this.axios.put("/api/categories/" + category.id, category);
         //send notify
-        alertify.notify(`update success category with id is "${category.id}"` , "success", 7);
+        alertify.notify(`UPDATE category with id is "${category.id}"` , "success", 7);
         category.isEdit = false;
       } catch (error) {
         console.log(error.response);
@@ -168,6 +168,7 @@ export default {
         })
         .then(response => {
           this.list_categories.splice(index, 1);
+           alertify.notify(`DELETE category with id is "${category.id}"` , "warning", 7);
         })
         .catch(errors => {
           if (errors.response.data.errors) {
@@ -186,15 +187,10 @@ export default {
             confirmButtonColor: "#DD6B55",
             confirmButtonText: `Yes, delete "${nameCategory}"!`,
             cancelButtonText: "No, cancel",
-            closeOnConfirm: false
+            closeOnConfirm: true
           },
           function(isConfirm) {
             if (isConfirm) {
-              swal(
-                "Deleted!",
-                `Category "${nameCategory}" and rooms of category has been deleted.`,
-                "success"
-              );
               resolve("delete success");
             } else {
               reject("canelled delete");
@@ -203,7 +199,7 @@ export default {
         );
       });
     }
-  }
+  },
 };
 </script>
 <style >

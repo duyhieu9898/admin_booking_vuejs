@@ -144,14 +144,19 @@ export default {
     },
     saveAddress() {
       if (this.checkAddress()) {
-        if (this.current_address != "") {
-          this.updateAddress();
-        } else {
-          this.createAddress();
+        try {
+          if (this.current_address != "") {
+            this.updateAddress();
+          } else {
+            this.createAddress();
+          }
+          var current_address = `${this.address.street} - ${this.address.ward.name}, ${this.address.district.name}, ${this.address.province.name}`;
+          this.current_address = current_address;
+          $("#adddress--model__edit").modal("hide");
+          alertify.notify("UPDATE user address success", "success", 7);
+        } catch (error) {
+          alertify.notify("There was an unexpected error", "error", 7);
         }
-        var current_address = `${this.address.street} - ${this.address.ward.name}, ${this.address.district.name}, ${this.address.province.name}`;
-        this.current_address = current_address;
-        $("#adddress--model__edit").modal("hide");
       }
     },
     createAddress() {
@@ -168,7 +173,7 @@ export default {
           this.$emit("address-id", res.data.address_id);
         })
         .catch(err => {
-          console.error(err.response.data.message);
+          throw err.response.data;
         });
     },
     updateAddress() {
@@ -183,7 +188,7 @@ export default {
           console.log(res.data.message);
         })
         .catch(err => {
-          console.error(err.response.data.message);
+          throw err.response.data;
         });
     },
     getListWardsByDistrict(disttictId) {
@@ -297,6 +302,6 @@ export default {
 </script>
 <style>
 .errorsCustom span {
-    color: red;
+  color: red;
 }
 </style>

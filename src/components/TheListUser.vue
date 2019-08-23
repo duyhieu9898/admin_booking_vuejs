@@ -211,7 +211,7 @@ export default {
       try {
         let response = await this.axios.post("/api/users/", this.userCreate);
         //send notify
-        alertify.notify(`create success user with name is "${this.userCreate.name}"`, "success", 7);
+        alertify.notify(`CREATE success user with name is "${this.userCreate.name}"`, "success", 7);
         //update list user side client
         this.userCreate.id = response.data.userId;
         this.userCreate.roles = [{ name: this.userCreate.role }];
@@ -223,9 +223,7 @@ export default {
         this.$validator.reset();
       } catch (error) {
         console.log(error.response);
-        if (typeof error.response.data.message == "string") {
-          alertify.notify(error.response.data.message, "error", 7);
-        }
+        alertify.notify('There was an unexpected error', "error", 7);
       }
     },
     async updateUser(user) {
@@ -244,19 +242,17 @@ export default {
           roleId: user.roles[0].id
         });
         //send notify
-        alertify.notify(`update success user with id is "user.id"`, "success", 7);
+        alertify.notify(`UPDATE success user with id is "user.id"`, "success", 7);
         user.isEdit = false;
       } catch (error) {
         console.log(error.response);
-        if (typeof error.response.data.message == "string") {
-          alertify.notify(error.response.data.message, "error", 7);
-        }
+        alertify.notify('There was an unexpected error', "error", 7);
       }
     },
     async deleteUser(user, index) {
       try {
         await this.axios.delete("/api/users/" + user.id);
-        alertify.notify("delete user with id is " + user.id, "success", 7);
+        alertify.notify("DELETE user with id is " + user.id, "warning", 7);
         this.list_users.splice(index, 1);
       } catch (error) {
         console.log(errors.response);

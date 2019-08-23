@@ -49,6 +49,8 @@ export default {
           return;
         }
         await this.axios.post("api/sent-notification", this.message);
+        this.title='';
+        this.content='';
       } catch (error) {
         console.log(error);
       }

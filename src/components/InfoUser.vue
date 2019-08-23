@@ -115,6 +115,7 @@ export default {
         .then(response => {
           console.log(response.data);
           this.isEdit = false;
+          alertify.notify(`UPDATE user with id: ${user.id}`, "success", 7);
         })
         .catch(errors => {
           console.log(errors.response);

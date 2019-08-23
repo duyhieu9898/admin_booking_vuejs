@@ -140,7 +140,7 @@ export default {
         this.$set(this.convenientCreate, "isEdit", false);
         this.list_convenient.push(this.convenientCreate);
         //send notify
-        alertify.notify(`create success convenient with id is "${this.convenientCreate.id}"` , "success", 7);
+        alertify.notify(`CREATE convenient with id is "${this.convenientCreate.id}"` , "success", 7);
         //reset form value
         this.convenientCreate = {};
         this.$validator.reset();
@@ -156,7 +156,7 @@ export default {
         }
         await this.axios.put("/api/convenients/" + convenient.id, convenient);
         //send notify
-        alertify.notify(`update success convenient with id is "${convenient.id}"` , "success", 7);
+        alertify.notify(`UPDATE convenient with id is "${convenient.id}"` , "success", 7);
         convenient.isEdit = false;
       } catch (error) {
         console.log(error.response);
@@ -174,6 +174,7 @@ export default {
         .then(response => {
           this.list_convenient.splice(index, 1);
           this.$validator.reset();
+          alertify.notify(`DELETE convenient with name ${convenient.name}`, "warning", 7);
         })
         .catch(errors => {
           console.log(errors.response);
@@ -191,15 +192,10 @@ export default {
             confirmButtonColor: "#DD6B55",
             confirmButtonText: `Yes, delete "${nameconvenient}"!`,
             cancelButtonText: "No, cancel",
-            closeOnConfirm: false
+            closeOnConfirm: true
           },
           function(isConfirm) {
             if (isConfirm) {
-              swal(
-                "Deleted!",
-                `convenient "${nameconvenient}" and convenients in rooms has been deleted.`,
-                "success"
-              );
               resolve("delete success");
             } else {
               reject("canelled delete");

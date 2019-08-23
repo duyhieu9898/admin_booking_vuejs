@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { log } from 'util';
+import { log } from "util";
 export default {
   props: {
     address_id: {
@@ -142,14 +142,19 @@ export default {
     },
     saveAddress() {
       if (this.checkAddress()) {
-        if (this.address_id) {
-          this.updateAddress();
-        } else {
-          this.createAddress();
+        try {
+          if (this.address_id) {
+            this.updateAddress();
+          } else {
+            this.createAddress();
+          }
+          var current_address = `${this.address.street} - ${this.address.ward.name}, ${this.address.district.name}, ${this.address.province.name}`;
+          this.current_address = current_address;
+          $("#adddress--model__edit").modal("hide");
+          alertify.notify("Update room address success", "success", 7);
+        } catch (error) {
+          alertify.notify("There was an unexpected error", "error", 7);
         }
-        var current_address = `${this.address.street} - ${this.address.ward.name}, ${this.address.district.name}, ${this.address.province.name}`;
-        this.current_address = current_address;
-        $("#adddress--model__edit").modal("hide");
       }
     },
     createAddress() {
@@ -166,7 +171,7 @@ export default {
           this.$emit("address-id", res.data.address_id);
         })
         .catch(err => {
-          console.error(err.response.data.message);
+          throw err.response.data;
         });
     },
     updateAddress() {
@@ -177,11 +182,8 @@ export default {
           district: this.address.district.id,
           province: this.address.province.id
         })
-        .then(res => {
-          console.log(res.data.message);
-        })
         .catch(err => {
-          console.error(err.response.data.message);
+          throw err.response.data;
         });
     },
     getListWardsByDistrict(disttictId) {
@@ -260,7 +262,7 @@ export default {
   watch: {
     address_id() {
       this.getAddressById();
-        console.log("dsds");
+      console.log("dsds");
     },
     getProvince() {
       if (this.address.province !== "Chose Province") {

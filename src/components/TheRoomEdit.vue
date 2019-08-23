@@ -317,9 +317,6 @@ export default {
       }
     };
   },
-  // mounted() {
-  //     $("html, body").animate({ scrollTop: 0 }, 300);
-  // },
   created() {
     this.room.id = parseInt(this.$route.params.id);
     this.getRoom();
@@ -344,8 +341,13 @@ export default {
     },
     async updateRoom() {
       await this.$validator.validate();
-       if (!this.errors.any()) {
-        this.axios
+       if (this.errors.any()) {
+        alertify.notify("You must fix all errors in the form ", "error", 7);
+        return;
+
+      }
+      try {
+        await this.axios
           .put("/api/rooms/" + this.room.id, {
             category_id: this.room.category_id,
             title: this.room.title,
@@ -355,19 +357,15 @@ export default {
             police_and_terms: this.room.police_and_terms,
             description: this.room.description,
             list_convenients_id: this.list_convenients_id
-          })
-          .then(res => {
-            console.log(res.data);
-            history.back();
-          })
-          .catch(errors => {
-            console.log(errors.response.data);
           });
+          alertify.notify("UPDATE room success", "success", 7);
+      } catch (error) {
+        console.log(error.response.data);
       }
     },
     resetForm() {
       this.$validator.reset();
-       this.getRoom();
+      this.getRoom();
     }
   }
 };

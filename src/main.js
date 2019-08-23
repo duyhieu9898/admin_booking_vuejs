@@ -81,6 +81,7 @@ Vue.component('state-overview', require('./components/StateOverview.vue').defaul
 Vue.component('sent-notification', require('./components/SentNotification.vue').default);
 Vue.component('apexchart', VueApexCharts);
 /* eslint-disable no-new */
+console.log("new new");
 new Vue({
     el: '#app',
     router,
