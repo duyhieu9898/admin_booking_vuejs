@@ -18,7 +18,7 @@
     <state-overview></state-overview>
     <chart-booking></chart-booking>
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-7">
         <div class="card-box">
           <div class="card-header">Todo List</div>
           <div class="card-body">
@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-6">
+      <div class="col-lg-5">
         <div class="card-box">
           <div class="card-header">Send Notification</div>
           <div class="card-body">

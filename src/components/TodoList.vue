@@ -23,9 +23,6 @@
               id
               :placeholder="placeholder.taskInput"
             />
-            <div class="errorMessage" :class="{show:isShow}">
-              <span>{{ errors.task }}</span>
-            </div>
             <!-- Task button -->
             <div class="input-group-append">
               <button
@@ -35,7 +32,7 @@
                 aria-pressed="true"
                 type="button"
               >
-                <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
+                <span class="ion-plus-round" title="create" aria-hidden="true"></span>
               </button>
               <button @click="task=null" class="btn btn-danger" type="button">Clear</button>
             </div>
@@ -77,21 +74,21 @@
                         class="btn btn-outline-success"
                         type="button"
                       >
-                        <span class="oi oi-check" title="pencil" aria-hidden="true"></span>
+                        <span class="ion-checkmark-round" title="tick completed" aria-hidden="true"></span>
                       </button>
                       <button
                         @click="taskTodo.isEdit = true"
                         class="btn btn-outline-primary"
                         type="button"
                       >
-                        <span class="oi oi-pencil" title="pencil" aria-hidden="true"></span>
+                        <span class="ion-edit" title="edit" aria-hidden="true"></span>
                       </button>
                       <button
                         @click="deleteTaskTodo(taskTodo, index)"
                         class="btn btn-outline-danger"
                         type="button"
                       >
-                        <span class="oi oi-trash" title="trash" aria-hidden="true"></span>
+                        <span class="ion-trash-b" title="trash" aria-hidden="true"></span>
                       </button>
                     </div>
                     <!-- Task Todo button-->
@@ -163,7 +160,7 @@ export default {
       listTask: [],
       task_todo: 0,
       task_completed: 0,
-      isShow: false
+      isShow: false,
     };
   },
   created() {
@@ -175,7 +172,7 @@ export default {
         this.axios
           .post("http://localhost:3000/task", { task: this.task })
           .then(response => {
-            console.log(response.data);
+
             this.getListTask();
             this.task = null;
           })
@@ -186,7 +183,6 @@ export default {
     },
     getListTask() {
       this.axios.get("http://localhost:3000/task").then(response => {
-        console.log(response.data);
         this.listTask = response.data;
         this.listTask.forEach(taskTodo => {
           this.$set(taskTodo, "isEdit", false);
@@ -247,17 +243,6 @@ export default {
     numTask() {
       return this.listTask.length;
     },
-    checkRequiredContentTask() {
-      this.errors = { task: null };
-      if (this.task === "") {
-        this.errors.task = "Task required.";
-        this.isShow = true;
-        return false;
-      } else {
-        this.isShow = false;
-      }
-      return true;
-    }
   },
   watch: {
     numTask() {
@@ -284,19 +269,11 @@ export default {
       },
       deep: true
     }
-  },
-  updated() {
-    this.checkRequiredContentTask;
   }
 };
 </script>
-<style lang="css" scoped>
-.test-dev {
-  position: relative;
-  top: 200px;
-  max-width: 300px;
-  max-width: 300px;
-}
+<style lang="css" >
+
 .errorMessage {
   width: 200px;
   height: 30px;

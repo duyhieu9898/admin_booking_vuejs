@@ -1985,6 +1985,7 @@ form.search-form-opened .btn.submit {
     padding: 0;
     position: relative;
     background-color: #222c3c;
+    flex: 1 0 auto;
 }
 
 .page-container:after,
@@ -9226,6 +9227,7 @@ nav-tabs>li {
     padding: 20px 5px;
     font-size: 13px;
     background-color: #222c3c;
+    flex-shrink: 0;
 }
 
 .page-footer:after,
@@ -10000,4 +10002,19 @@ select {
 
 select::-ms-expand {
     display: none;
+}
+
+html,
+body,
+.admin-app {
+    height: 100% !important;
+}
+
+.admin-app {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-container {
+    height: calc(100% -120px);
 }

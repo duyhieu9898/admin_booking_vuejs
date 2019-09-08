@@ -136,11 +136,29 @@ export default {
   created() {
     this.getListBooking();
     let app=this;
-    this.$socket.on('message', function (data) {
+    //*realtime user pusher
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('e9e863659964b9b23e29', {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    // Subscribe to the channel we specified in our Laravel Event
+    var channel = pusher.subscribe('booking');
+
+    // Bind a function to a Event (the full Laravel class)
+    channel.bind('new-booking', function(data) {
       console.log(data);
       app.getListBooking();
-      //this.$forceUpdate();
     });
+
+    //*realtime user redis and socket
+    // this.$socket.on('message', function (data) {
+    //   console.log(data);
+    //   app.getListBooking();
+    // });
   },
   methods: {
     getListBooking() {
@@ -185,15 +203,10 @@ export default {
             confirmButtonColor: "#DD6B55",
             confirmButtonText: `Yes, delete this booking!`,
             cancelButtonText: "No, cancel",
-            closeOnConfirm: false
+            closeOnConfirm: true
           },
           function(isConfirm) {
             if (isConfirm) {
-              swal(
-                "Deleted!",
-                `booking no "${idBooking}" has been deleted.`,
-                "success"
-              );
               resolve("delete success");
             } else {
               reject("canelled delete");

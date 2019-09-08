@@ -11,10 +11,15 @@ import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 import axios from "axios";
 import VueAxios from "vue-axios";
-import io from 'socket.io-client';
 import VueApexCharts from 'vue-apexcharts';
-const socket = io('http://localhost:3303');
-//
+//! NOTE: if switch method real time then configured path environment laravel for redis or pusher to laravel use broadcast
+// TODO: CURRENT not use real time laravel server side, But only real time between client and client
+// TODO: create model laravel side for save information to DB
+//*real time with redis and socket
+//import io from 'socket.io-client';
+//const socket = io('http://localhost:3303');
+//Vue.prototype.$socket = socket;
+//*real time with pusher and laravel echo
 // import Echo from 'laravel-echo';
 // import Pusher from 'pusher-js'
 // let echo = new Echo({
@@ -34,15 +39,17 @@ const socket = io('http://localhost:3303');
 //     .listen('bookingEvent', (e) => {
 //         console.log("ok:", e)
 //     });
-//config
-const token = '8bbd88ccd51fd163bf59c84c820d98246f258fbefecf41073160b183d2fe86e6'
+//config for app
+const token = 'c6f12e16d1e82b0f25688118d2680d2a6d5715d991d7e07a0c8032a24d6ffec7'
 axios.defaults.baseURL = "http://localhost:8000"
 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 //
+Vue.config.productionTip = false
+    //
 Vue.prototype.$host_name_server = 'http://localhost:8000/';
 Vue.prototype.$token = token
-Vue.prototype.$socket = socket;
-//Overwriting messages errors
+    //Overwriting messages errors
 const dictionary = {
     en: {
         attributes: {
@@ -58,7 +65,7 @@ const dictionary = {
     },
 };
 Validator.localize(dictionary);
-// register directive v-money and component <money>
+//register directive
 Vue.use(money, { precision: 3 })
 Vue.use(BootstrapVue);
 Vue.use(CKEditor);
@@ -68,8 +75,7 @@ Vue.use(VeeValidate, {
     mode: 'eager'
 });
 Vue.use(VueAxios, axios);
-Vue.config.productionTip = false
-    //Register component in app
+//Register component
 Vue.component('room-photo-component', require('./components/RoomPhoto.vue').default);
 Vue.component('room-address-component', require('./components/RoomAddress.vue').default);
 Vue.component('user-address-component', require('./components/UserAddress.vue').default);
@@ -79,9 +85,9 @@ Vue.component('info-user-component', require('./components/InfoUser.vue').defaul
 Vue.component('chart-booking', require('./components/ChartBooking.vue').default);
 Vue.component('state-overview', require('./components/StateOverview.vue').default);
 Vue.component('sent-notification', require('./components/SentNotification.vue').default);
-Vue.component('apexchart', VueApexCharts);
-/* eslint-disable no-new */
-console.log("new new");
+Vue.component('apex-chart', VueApexCharts);
+Vue.component('search-user', require('./components/SearchUser.vue').default);
+//create new instance app
 new Vue({
     el: '#app',
     router,

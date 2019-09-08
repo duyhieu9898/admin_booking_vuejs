@@ -6,7 +6,7 @@
            <header>Chart Booking In Month</header>
         </div>
         <div class="card-body">
-          <apexchart type="area" :height="500" :options="chartOptions" :series="series"></apexchart>
+          <apex-chart type="area" :height="500" :options="chartOptions" :series="series"></apex-chart>
         </div>
       </div>
     </div>

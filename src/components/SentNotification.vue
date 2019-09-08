@@ -1,9 +1,18 @@
 <template>
   <div class="container">
     <div class="form-group">
-      <label for="fname">Title</label>
+      <label for="type-notification">Type Notificaion</label>
+      <select class="form-control" id="type-notification" v-model="type_notification">
+        <option value="all-users">Sent To All Users</option>
+        <option value="some users">Sent To Some Users</option>
+      </select>
+    </div>
+    <search-user v-user v-if="type_notification == 'some users'">Search user</search-user>
+    <div class="form-group">
+      <label for="title-notification">Title</label>
       <input
         class="form-control"
+        id="title-notification"
         type="text"
         v-model="message.title"
         v-validate="'required|min:3|max:36'"
@@ -32,12 +41,21 @@
 </template>
 <script>
 export default {
+  directives: {
+    user: {
+      bind: function (el, binding, vnode) {
+        console.log(vnode);
+      }
+    }
+  },
   data() {
     return {
+      type_notification: "all-users",
+      receved_id: null,
       message: {
         title: "",
         content: ""
-      }
+      },
     };
   },
   methods: {
@@ -55,7 +73,10 @@ export default {
         console.log(error);
       }
     }
-  }
+  },
+  watch: {
+
+  },
 };
 </script>
 <style scoped>

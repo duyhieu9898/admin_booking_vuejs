@@ -354,9 +354,6 @@ export default {
     };
   },
   created() {
-    this.$socket.on('message', function (data) {
-      console.log(data);
-    });
     this.getCurrentUser();
     //this.getStatistical();
   },
