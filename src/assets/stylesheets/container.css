@@ -1,0 +1,42 @@
+.errors{
+    margin: 0 !important;
+    color: #dc3545;
+    font-size: 12px;
+  }
+.fade-down-enter-active {
+animation-name: fadeInDown;
+animation-duration: 0.5s;
+}
+.fade-down-leave-active {
+animation-name: fadeOutDown;
+animation-duration: 0.4s;
+}
+
+@keyframes fadeInDown {
+from {
+    transform: translate3d(50px, 0, 0);
+}
+to {
+    transform: none;
+}
+}
+
+@keyframes fadeOutDown {
+from {
+    transform: none;
+}
+to {
+    transform: translate3d(50px, 0, 0);
+}
+}
+.ajs-message,
+.ajs-success {
+    color: #fff !important;
+    text-align: center;
+}
+.ajs-warning{
+color: #000 !important;
+}
+.alertify-notifier{
+background-color: #28A745 !important;
+}

@@ -9,14 +9,11 @@ import TheListBooking from '../components/TheListBooking.vue';
 import TheBookingDetail from '../components/TheBookingDetail.vue';
 import TheListCategory from '../components/TheListCategory.vue';
 import TheListConvenient from '../components/TheListConvenient.vue';
+import TheLogin from '../components/TheLogin.vue'
 Vue.use(Router)
 export default new Router({
     mode: 'history',
-    routes: [{
-            path: '/',
-            name: 'dash-board',
-            component: TheDashBoard
-        },
+    routes: [
         {
             path: '/admin/rooms',
             name: 'list-room',
@@ -56,6 +53,16 @@ export default new Router({
             path: '/admin/convenients',
             name: 'list-convenient',
             component: TheListConvenient
+        },
+        {
+            path: '/admin/login',
+            name: 'login',
+            component: TheLogin
+        },
+        {
+            path: '*',
+            name: 'dash-board',
+            component: TheDashBoard
         },
     ],
     scrollBehavior(to, from, savedPosition) {
