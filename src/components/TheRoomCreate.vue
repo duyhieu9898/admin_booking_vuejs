@@ -187,7 +187,7 @@
                     </div>
                     <div class="col-lg-6 p-t-20">
                       <!--emit address id -->
-                      <room-address-component @address-id="getAddressId"></room-address-component>
+                      <room-address @address-id="getAddressId"></room-address>
                       <input
                         type="hidden"
                         v-validate="'required'"
@@ -244,18 +244,18 @@
             </div>
             <div class="col-lg-12 p-t-20">
               <div class="card-box txt-full-width is-dirty is-upgraded">
-                <div class="card-header">Room Convenients</div>
+                <div class="card-header">Room Conveniences</div>
                 <div class="card-body">
                   <div class="row">
-                    <room-convenients-component
-                      :convenients="list_convenients"
-                      @arr-convenients-id="getArrConvenientsId"
-                    ></room-convenients-component>
+                    <room-conveniences
+                      :conveniences="list_conveniences"
+                      @arr-conveniences-id="getArrConveniencesId"
+                    ></room-conveniences>
                     <input
                       type="hidden"
                       v-validate="'required'"
                       name="convenient_room"
-                      v-model="list_convenients"
+                      v-model="list_conveniences"
                     />
                     <span
                       v-show="errors.has('convenient_room')"
@@ -266,7 +266,7 @@
               </div>
             </div>
             <div class="col-lg-12 p-t-20">
-              <room-photo-component @arr-images-id="getArrImagesId"></room-photo-component>
+              <room-photo @arr-images-id="getArrImagesId"></room-photo>
               <input
                 type="hidden"
                 v-validate="'required'"
@@ -308,8 +308,17 @@
 
 <script>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import roomPhoto from "./commons/RoomPhoto";
+import roomConveniences from "./commons/RoomConveniences";
+import roomAddress from "./commons/RoomAddress";
+import apiUrl from "@/constants/apiUrl";
 
 export default {
+  components: {
+    roomPhoto,
+    roomConveniences,
+    roomAddress
+  },
   data() {
     return {
       editor: ClassicEditor,
@@ -327,7 +336,7 @@ export default {
         ]
       },
       list_categories: [],
-      list_convenients: [],
+      list_conveniences: [],
       room: {
         category_id: "Chose type of the room",
         address_id: null,
@@ -338,7 +347,7 @@ export default {
         description: null,
         police_and_terms: null,
         address_id: null,
-        list_convenients_id: [],
+        list_conveniences_id: [],
         list_images_id: []
       },
       money: {
@@ -368,19 +377,17 @@ export default {
     this.getFormData();
   },
   methods: {
-    getFormData() {
-      this.axios
-        .get("/api/rooms/create")
-        .then(res => {
-          this.list_categories = res.data.categories;
-          this.list_convenients = res.data.convenients;
-        })
-        .catch(err => {
-          console.log(err.response.data);
-        });
+    async getFormData() {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_DATA_CREATE_ROOM);
+        this.list_categories = data.categories;
+        this.list_conveniences = data.conveniences;
+      } catch (error) {
+        console.log(error.response.data);
+      }
     },
-    getArrConvenientsId(arrConvenientsId) {
-      this.room.list_convenients_id = arrConvenientsId;
+    getArrConveniencesId(arrConveniencesId) {
+      this.room.list_conveniences_id = arrConveniencesId;
     },
     getAddressId(addressId) {
       this.room.address_id = addressId;
@@ -395,7 +402,7 @@ export default {
         return;
       }
       try {
-        await this.axios.post("/api/rooms/", {
+        await this.axios.post(apiUrl.CREATE_ROOM, {
           category_id: this.room.category_id,
           address_id: this.room.address_id,
           title: this.room.title,
@@ -403,7 +410,7 @@ export default {
           room_area: this.room.room_area,
           maximum_peoples_number: this.room.maximum_peoples_number,
           police_and_terms: this.room.police_and_terms,
-          list_convenients_id: this.room.list_convenients_id,
+          list_conveniences_id: this.room.list_conveniences_id,
           list_images_id: this.room.list_images_id,
           price: this.room.price
         });
@@ -425,7 +432,7 @@ export default {
         description: null,
         police_and_terms: null,
         address_id: null,
-        list_convenients_id: [],
+        list_conveniences_id: [],
         list_images_id: []
       };
     }

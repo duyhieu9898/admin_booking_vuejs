@@ -1,7 +1,5 @@
 $(function() {
     $('.btn-sweetalert').on('click', function() {
-        console.log('okkk');
-
         var type = $(this).data('type');
         if (type === 'basic') {
             showBasicMessage();

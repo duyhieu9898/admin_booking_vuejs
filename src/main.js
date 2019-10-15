@@ -11,7 +11,8 @@ import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 import axios from "axios";
 import VueAxios from "vue-axios";
-import VueApexCharts from 'vue-apexcharts';
+import store from './store';
+import constants from './constants/config'
 //! NOTE: if switch method real time then configured path environment laravel for redis or pusher to laravel use broadcast
 // TODO: CURRENT not use real time laravel server side, But only real time between client and client
 // TODO: create model laravel side for save information to DB
@@ -40,14 +41,12 @@ import VueApexCharts from 'vue-apexcharts';
 //         console.log("ok:", e)
 //     });
 //config for app
-const token = 'cdcc4de55400db8bd806035d431b1dad389c49b416f92dd358d1a139e78303a5'
-axios.defaults.baseURL = "http://localhost:8000"
+const token = '97c3654d6ed26a5b18285ba174022fbb00b5e83f52145cd789574bd1cd6cd1e1'
+axios.defaults.baseURL = constants.SERVER_ADDRESS
 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 //
 Vue.config.productionTip = false
-    //
-Vue.prototype.$host_name_server = 'http://localhost:8000/';
 Vue.prototype.$token = token
     //Overwriting messages errors
 const dictionary = {
@@ -75,28 +74,12 @@ Vue.use(VeeValidate, {
     mode: 'eager'
 });
 Vue.use(VueAxios, axios);
-//Register component
-Vue.component('room-photo-component', require('./components/commons/RoomPhoto.vue').default);
-Vue.component('room-address-component', require('./components/commons/RoomAddress.vue').default);
-Vue.component('user-address-component', require('./components/commons/UserAddress.vue').default);
-Vue.component('room-convenients-component', require('./components/commons/RoomConvenients.vue').default);
-Vue.component('todo-list-component', require('./components/commons/TodoList.vue').default);
-Vue.component('info-user-component', require('./components/commons/InfoUser.vue').default);
-Vue.component('chart-booking', require('./components/commons/ChartBooking.vue').default);
-Vue.component('state-overview', require('./components/commons/StateOverview.vue').default);
-Vue.component('sent-notification', require('./components/commons/SentNotification.vue').default);
-Vue.component('apex-chart', VueApexCharts);
-Vue.component('search-user', require('./components/commons/SearchUser.vue').default);
-Vue.component('header-component', require('./components/commons/Header.vue').default);
-Vue.component('container-component', require('./components/commons/Container.vue').default);
-Vue.component('footer-component', require('./components/commons/Footer.vue').default);
-Vue.component('notification-component', require('./components/commons/Notification.vue').default);
-Vue.component('chat-component', require('./components/commons/ChatSideBar.vue').default);
-Vue.component('sidebar-container-component', require('./components/commons/SidebarContainer.vue').default);
+
 //create new instance app
-new Vue({
+const vm = new Vue({
     el: '#app',
     router,
+    store,
     components: { App },
     template: '<App/>'
 })

@@ -6,7 +6,7 @@
   >
     <input
       class="info__address width-ellipsis mdl-textfield__input"
-      v-model="current_address"
+      v-model="currentAddress"
       placeholder="Enter address of the room"
       readonly
       data-toggle="modal"
@@ -37,8 +37,8 @@
                   v-model="address.street"
                   placeholder="enter Street"
                 />
-                <div class="errors_custom" v-if="errors_custom.address.street != null">
-                  <p>{{ errors_custom.address.street }}</p>
+                <div class="customErrors" v-if="customErrors.address.street != null">
+                  <p>{{ customErrors.address.street }}</p>
                 </div>
               </div>
               <div class="col-8 form-group">
@@ -46,38 +46,38 @@
                   <option hidden>Chose Province</option>
                   <option
                     v-bind:value="{ id: province.id, name: province.name }"
-                    v-for="province in list_provinces"
+                    v-for="province in provinces"
                     :key="province.id"
                   >{{ province.name }}</option>
                 </select>
-                <div class="errors_custom" v-if="errors_custom.address.province != null">
-                  <p>{{ errors_custom.address.province }}</p>
+                <div class="customErrors" v-if="customErrors.address.province != null">
+                  <p>{{ customErrors.address.province }}</p>
                 </div>
               </div>
               <div class="col-8 form-group">
-                <select class="form-control" v-model="address.district">
+                <select class="form-control" v-model="address.district" ref="slelect-district">
                   <option hidden>Chose District</option>
                   <option
                     v-bind:value="{ id: district.id, name: district.name }"
-                    v-for="district in list_districts"
+                    v-for="district in districts"
                     :key="district.id"
                   >{{ district.name }}</option>
                 </select>
-                <div class="errors_custom" v-if="errors_custom.address.district != null">
-                  <p>{{ errors_custom.address.district }}</p>
+                <div class="customErrors" v-if="customErrors.address.district != null">
+                  <p>{{ customErrors.address.district }}</p>
                 </div>
               </div>
               <div class="col-8 form-group">
-                <select class="form-control" v-model="address.ward">
+                <select class="form-control" v-model="address.ward" ref="slelect-ward">
                   <option hidden>Chose Ward</option>
                   <option
                     v-bind:value="{ id: ward.id, name: ward.name}"
-                    v-for="ward in list_wards"
+                    v-for="ward in wards"
                     :key="ward.id"
                   >{{ ward.name }}</option>
                 </select>
-                <div class="errors_custom" v-if="errors_custom.address.ward != null">
-                  <p>{{ errors_custom.address.ward }}</p>
+                <div class="customErrors" v-if="customErrors.address.ward != null">
+                  <p>{{ customErrors.address.ward }}</p>
                 </div>
               </div>
             </div>
@@ -96,8 +96,10 @@
 </template>
 
 <script>
-import { log } from "util";
+import apiUrl from "../../constants/apiUrl"
+
 export default {
+  name: "room-address",
   props: {
     address_id: {
       type: Number
@@ -111,11 +113,11 @@ export default {
         district: "Chose District",
         province: "Chose Province"
       },
-      current_address: "",
-      list_provinces: [],
-      list_districts: [],
-      list_wards: [],
-      errors_custom: {
+      currentAddress: "",
+      provinces: [],
+      districts: [],
+      wards: [],
+      customErrors: {
         address: {
           street: null,
           ward: null,
@@ -123,175 +125,168 @@ export default {
           province: null
         }
       }
-    };
+    }
   },
   created() {
-    this.getListProvinces();
+    this.getListProvinces()
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs['slelect-district'].disabled = true
+      this.$refs['slelect-ward'].disabled = true
+    })
   },
   methods: {
-    getAddressById() {
-      this.axios
-        .get("/api/address/" + this.address_id)
-        .then(res => {
-          var address = res.data.address;
-          this.current_address = `${address.street}, ${address.ward} - ${address.district} - ${address.province}`;
-        })
-        .catch(err => {
-          console.error(err);
-        });
+    async getAddressById() {
+      try {
+        const response = await this.axios.get(apiUrl.GET_ADDRESS_BY_ID.replace(":id", this.address_id))
+        var address = response.data.address
+        this.currentAddress = `${address.street}, ${address.ward} - ${address.district} - ${address.province}`
+      } catch (error) {
+        console.error(error)
+      }
     },
     saveAddress() {
       if (this.checkAddress()) {
         try {
           if (this.address_id) {
-            this.updateAddress();
+            this.updateAddress()
           } else {
-            this.createAddress();
+            this.createAddress()
           }
-          var current_address = `${this.address.street} - ${this.address.ward.name}, ${this.address.district.name}, ${this.address.province.name}`;
-          this.current_address = current_address;
-          $("#adddress--model__edit").modal("hide");
-          alertify.notify("Update room address success", "success", 7);
+          this.currentAddress = `${this.address.street} - ${this.address.ward.name}, ${this.address.district.name}, ${this.address.province.name}`
+          $("#adddress--model__edit").modal("hide")
+          alertify.notify("Update room address success", "success", 7)
         } catch (error) {
-          alertify.notify("There was an unexpected error", "error", 7);
+          alertify.notify("There was an unexpected error", "error", 7)
         }
       }
     },
-    createAddress() {
-      this.axios
-        .post("/api/addresses/create", {
+    async createAddress() {
+      try {
+        const response = await this.axios.post(apiUrl.CREATE_ADDRESS, {
           street: this.address.street,
           ward: this.address.ward.id,
           district: this.address.district.id,
           province: this.address.province.id
         })
-        .then(res => {
-          //return id address
-          console.log(res.data.message);
-          this.$emit("address-id", res.data.address_id);
-        })
-        .catch(err => {
-          throw err.response.data;
-        });
+        this.$emit("address-id", response.data.address_id)
+      } catch (error) {
+        throw err.response
+      }
     },
-    updateAddress() {
-      this.axios
-        .put("/api/address/" + this.address_id, {
-          street: this.address.street,
-          ward: this.address.ward.id,
-          district: this.address.district.id,
-          province: this.address.province.id
-        })
-        .catch(err => {
-          throw err.response.data;
-        });
+   updateAddress() {
+      try {
+        this.axios.put(apiUrl.UPDATE_ADDRESS_BY_ID.replace(":id", this.address_id), {
+            street: this.address.street,
+            ward: this.address.ward.id,
+            district: this.address.district.id,
+            province: this.address.province.id
+          }
+        )
+      } catch (error) {
+        throw err.response
+      }
     },
-    getListWardsByDistrict(disttictId) {
-      this.axios
-        .get("/api/wards/" + disttictId)
-        .then(res => {
-          this.list_wards = res.data;
-        })
-        .catch(err => {
-          console.error(err);
-        });
+    async getListWardsByDistrict(disttictId) {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_WARDS_BY_DISTRICT_ID.replace(":id", disttictId))
+        this.wards = data
+        this.$refs['slelect-ward'].disabled = false
+      } catch (error) {
+        console.error(error)
+      }
     },
-    getListDistrictsByProvince(provinceId) {
-      this.axios
-        .get("/api/districts/" + provinceId)
-        .then(res => {
-          this.list_districts = res.data;
-        })
-        .catch(err => {
-          console.error(err);
-        });
+    async getListDistrictsByProvince(provinceId) {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_DISTRICTS_BY_PROVINCE_ID.replace(":id", provinceId))
+        this.districts = data
+        this.$refs['slelect-district'].disabled = false
+      } catch (error) {
+        console.error(error)
+      }
     },
-    getListProvinces() {
-      this.axios
-        .get("/api/provinces")
-        .then(res => {
-          this.list_provinces = res.data;
-        })
-        .catch(err => {
-          console.error(err);
-        });
+    async getListProvinces() {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_PROVINCES)
+        this.provinces = data
+      } catch (error) {
+        console.error(error)
+      }
     },
     checkAddress() {
       //reset error
-      this.errors_custom.address.street = null;
-      this.errors_custom.address.ward = null;
-      this.errors_custom.address.district = null;
-      this.errors_custom.address.province = null;
+      this.customErrors.address.street = null
+      this.customErrors.address.ward = null
+      this.customErrors.address.district = null
+      this.customErrors.address.province = null
       if (this.address.street === "") {
-        this.errors_custom.address.street = "Please enter Street.";
+        this.customErrors.address.street = "Please enter Street."
       }
       if (this.address.ward === "Chose Ward") {
-        this.errors_custom.address.ward = "Please choose Ward";
+        this.customErrors.address.ward = "Please choose Ward"
       }
       if (this.address.district === "Chose District") {
-        this.errors_custom.address.district = "Please choose District.";
+        this.customErrors.address.district = "Please choose District."
       }
       if (this.address.province === "Chose Province") {
-        this.errors_custom.address.province = "Please choose Province.";
+        this.customErrors.address.province = "Please choose Province."
       }
       if (
-        this.errors_custom.address.street === null &&
-        this.errors_custom.address.province === null &&
-        this.errors_custom.address.district === null &&
-        this.errors_custom.address.ward === null
+        this.customErrors.address.street === null &&
+        this.customErrors.address.province === null &&
+        this.customErrors.address.district === null &&
+        this.customErrors.address.ward === null
       ) {
-        return true;
+        return true
       }
-      return false;
+      return false
     }
   },
   computed: {
     getProvince() {
-      return this.address.province;
+      return this.address.province
     },
     getDistrict() {
-      return this.address.district;
+      return this.address.district
     },
     getWard() {
-      return this.address.ward;
+      return this.address.ward
     },
     getStreet() {
-      return this.address.street;
+      return this.address.street
     }
   },
   watch: {
     address_id() {
-      this.getAddressById();
-      console.log("dsds");
+      this.getAddressById()
     },
     getProvince() {
       if (this.address.province !== "Chose Province") {
-        this.errors_custom.address.province = null;
-        this.getListDistrictsByProvince(this.address.province.id);
+        this.customErrors.address.province = null
+        this.getListDistrictsByProvince(this.address.province.id)
         //reset value select default
-        this.address.district = "Chose District";
+        this.address.district = "Chose District"
       }
     },
     getDistrict() {
       if (this.address.district !== "Chose Province") {
-        this.errors_custom.address.district = null;
-        this.getListWardsByDistrict(this.address.district.id);
+        this.customErrors.address.district = null
+        this.getListWardsByDistrict(this.address.district.id)
         //reset value select default
-        this.address.ward = "Chose Ward";
+        this.address.ward = "Chose Ward"
       }
     },
     getWard() {
       if (this.address.ward !== "Chose Ward") {
-        this.errors_custom.address.ward = null;
+        this.customErrors.address.ward = null
       }
     },
     getStreet() {
       if (this.address.street !== "Chose Province") {
-        this.errors_custom.address.street = null;
+        this.customErrors.address.street = null
       }
     }
   }
-};
+}
 </script>
-<style>
-</style>

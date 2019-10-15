@@ -36,8 +36,8 @@
                         <td v-if="checkIsAdmin">Action</td>
                       </tr>
                     </thead>
-                    <tbody v-if="list_users.length">
-                      <tr v-for="(user, index) in list_users" v-bind:key="user.id">
+                    <tbody v-if="listUser.length">
+                      <tr v-for="(user, index) in listUser" v-bind:key="user.id">
                         <td>{{ user.id }}</td>
                         <td v-if="!user.isEdit">{{ user.name }}</td>
                         <td v-else>
@@ -165,6 +165,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import apiUrl from '@/constants/apiUrl'
+
 export default {
   data() {
     return {
@@ -174,90 +177,20 @@ export default {
         phone: null,
         role: "customer"
       },
-      currentUser: {},
-      list_users: []
     };
   },
-  created() {
-    this.getCurrentUser();
-    this.getListUsers();
+  computed: {
+    ...mapGetters([
+      'currentUser',
+      'listUser'
+    ])
   },
   methods: {
-    async getCurrentUser() {
-      try {
-        let response = await this.axios.get("api/getCurrentUser");
-        this.currentUser = response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getListUsers() {
-      try {
-        let response = await this.axios.get("/api/users/");
-        this.list_users = response.data;
-        this.list_users.forEach(user => {
-          this.$set(user, "isEdit", false);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async createUser() {
-      await this.$validator.validate();
-      if (this.errors.any()) {
-        alertify.notify("You must fix all errors in the form ", "error", 7);
-        return;
-      }
-      try {
-        let response = await this.axios.post("/api/users/", this.userCreate);
-        //send notify
-        alertify.notify(`CREATE success user with name is "${this.userCreate.name}"`, "success", 7);
-        //update list user side client
-        this.userCreate.id = response.data.userId;
-        this.userCreate.roles = [{ name: this.userCreate.role }];
-        this.list_users.push(this.userCreate);
-        this.$set(this.userCreate, "isEdit", false);
-        //reset value
-        this.userCreate = {};
-        this.userCreate.role = "customer";
-        this.$validator.reset();
-      } catch (error) {
-        console.log(error.response);
-        alertify.notify('There was an unexpected error', "error", 7);
-      }
-    },
-    async updateUser(user) {
-      try {
-        //check validator
-        await this.$validator.validateAll("user-" + user.id);
-        if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7);
-          return;
-        }
-        //send request
-        await this.axios.put("/api/users/" + user.id, {
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          roleId: user.roles[0].id
-        });
-        //send notify
-        alertify.notify(`UPDATE success user with id is "user.id"`, "success", 7);
-        user.isEdit = false;
-      } catch (error) {
-        console.log(error.response);
-        alertify.notify('There was an unexpected error', "error", 7);
-      }
-    },
-    async deleteUser(user, index) {
-      try {
-        await this.axios.delete("/api/users/" + user.id);
-        alertify.notify("DELETE user with id is " + user.id, "warning", 7);
-        this.list_users.splice(index, 1);
-      } catch (error) {
-        console.log(errors.response);
-      }
-    },
+    ...mapGetters([
+      'createUser',
+      'updateUser',
+      'deleteUser'
+    ]),
     resetFormUserCreate() {
       this.$validator.reset();
       this.userCreate = {

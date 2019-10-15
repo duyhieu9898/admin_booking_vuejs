@@ -555,70 +555,8 @@ var App = function() {
                 scrollTop: $('.chat-sidebar-item').height()
             }, 1000);
         });
-
-
         wrapper.find('.chat-sidebar-chat-user .chat-sidebar-back-to-list').on('click', function() {
             wrapperChat.removeClass("chat-sidebar-content-item-shown");
-        });
-
-
-        /******* Manage Chat massage ************/
-
-        var handleChatMessagePost = function(e) {
-            e.preventDefault();
-
-            var chatContainer = wrapperChat.find(".chat-sidebar-chat-user-messages");
-            var input = wrapperChat.find('.chat-sidebar-chat-user-form .form-control');
-
-            var text = input.val();
-            if (text.length === 0) {
-                return;
-            }
-
-            var preparePost = function(dir, time, name, avatar, message) {
-                var tpl = '';
-                tpl += '<div class="post ' + dir + '">';
-                tpl += '<img class="avatar" alt="" src="' + Layout.getLayoutImgPath() + avatar + '.jpg"/>';
-                tpl += '<div class="message">';
-                tpl += '<span class="arrow"></span>';
-                tpl += '<a href="#" class="name">' + name + '</a>&nbsp;';
-                tpl += '<span class="datetime">' + time + '</span>';
-                tpl += '<span class="body body-'+dir+'">';
-                tpl += message;
-                tpl += '</span>';
-                tpl += '</div>';
-                tpl += '</div>';
-                $(".chat-sidebar-chat-user-messages").animate({
-                    //scrollTop: $('.chat-sidebar-chat-user-messages').height()
-                scrollTop: $(document).height()
-                }, 1000);
-                return tpl;
-            };
-
-            // handle post
-            var time = new Date();
-            var message = preparePost('out', (time.getHours() + ':' + time.getMinutes()), "Kiran Patel", '../assets/img/dp', text);
-            message = $(message);
-            chatContainer.append(message);
-
-
-            input.val("");
-
-            // simulate reply
-            setTimeout(function() {
-                var time = new Date();
-                var message = preparePost('in', (time.getHours() + ':' + time.getMinutes()), "Jacob Ryan", '../assets/img/user/user5', 'Lorem ipsum doloriam nibh...');
-                message = $(message);
-                chatContainer.append(message);
-            }, 2000);
-        };
-
-        wrapperChat.find('.chat-sidebar-chat-user-form .btn').on('click', handleChatMessagePost);
-        wrapperChat.find('.chat-sidebar-chat-user-form .form-control').on('keypress', function(e) {
-            if (e.which == 13) {
-                handleChatMessagePost(e);
-                return false;
-            }
         });
     };
 

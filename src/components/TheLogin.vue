@@ -11,11 +11,11 @@
 					</span>
 					<div class="wrap-input100 validate-input" data-validate = "Enter username">
 						<input class="input100" type="text" name="username" placeholder="Username">
-						
+
 					</div>
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
 						<input class="input100" type="password" name="pass" placeholder="Password">
-						
+
 					</div>
 					<div class="contact100-form-checkbox">
 						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
@@ -38,6 +38,7 @@
 		</div>
 	</div>
 </template>
+
 <style>
 @import '../assets/stylesheets/login.css';
 </style>

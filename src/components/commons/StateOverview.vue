@@ -78,14 +78,14 @@
   </div>
 </template>
 <script>
+import apiUrl from "../../constants/apiUrl.js";
+
 export default {
+  name: "StateOverview",
   data: function() {
     return {
-      datas:{
-
-
-      }
-    }
+      datas: {}
+    };
   },
   created() {
     this.getDataStatistical();
@@ -93,13 +93,12 @@ export default {
   methods: {
     async getDataStatistical() {
       try {
-        let response = await this.axios.get("api/statistical");
-        this.datas = response.data;
-
+        const { data } = await this.axios.get(apiUrl.GET_STATISTICAL);
+        this.datas = data;
       } catch (error) {
         console.log(error);
       }
-    },
+    }
   }
 };
 </script>

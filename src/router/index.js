@@ -1,19 +1,30 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import TheListRoom from '../components/TheListRoom.vue';
-import TheRoomEdit from '../components/TheRoomEdit.vue';
-import TheRoomCreate from '../components/TheRoomCreate.vue';
-import TheListUser from '../components/TheListUser.vue';
-import TheDashBoard from '../components/TheDashBoard.vue';
-import TheListBooking from '../components/TheListBooking.vue';
-import TheBookingDetail from '../components/TheBookingDetail.vue';
-import TheListCategory from '../components/TheListCategory.vue';
-import TheListConvenient from '../components/TheListConvenient.vue';
-import TheLogin from '../components/TheLogin.vue'
+import Vue from 'vue'
+import Router from 'vue-router'
+import TheListRoom from '@/components/TheListRoom'
+import TheRoomEdit from '@/components/TheRoomEdit'
+import TheRoomCreate from '@/components/TheRoomCreate'
+import TheListUser from '@/components/TheListUser'
+import TheDashBoard from '@/components/TheDashBoard'
+import TheListBooking from '@/components/TheListBooking'
+import TheBookingDetail from '@/components/TheBookingDetail'
+import TheListCategory from '@/components/TheListCategory'
+import TheListConvenient from '@/components/TheListConvenient'
+import TheLogin from '@/components/TheLogin'
+import NotFound from '@/components/TheNotFound'
 Vue.use(Router)
 export default new Router({
     mode: 'history',
     routes: [
+        {
+          path: '/',
+          name: 'dash-board',
+          component: TheDashBoard
+        },
+        {
+          path: '/admin/login',
+          name: 'login',
+          component: TheLogin
+        },
         {
             path: '/admin/rooms',
             name: 'list-room',
@@ -50,20 +61,19 @@ export default new Router({
             component: TheListCategory
         },
         {
-            path: '/admin/convenients',
+            path: '/admin/conveniences',
             name: 'list-convenient',
             component: TheListConvenient
         },
         {
-            path: '/admin/login',
-            name: 'login',
-            component: TheLogin
+          name: '404',
+          path: '/404',
+          component: NotFound
         },
         {
-            path: '*',
-            name: 'dash-board',
-            component: TheDashBoard
-        },
+          path: '*',
+          redirect: '404'
+        }
     ],
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {

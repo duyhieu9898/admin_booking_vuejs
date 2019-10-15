@@ -13,7 +13,14 @@
   </div>
 </template>
 <script>
+import apexChart from 'vue-apexcharts'
+import apiUrl from '../../constants/apiUrl.js'
+
 export default {
+  name: 'ChartBooking',
+  components: {
+    apexChart
+  },
   data: function() {
     return {
       series: [
@@ -49,7 +56,7 @@ export default {
   methods: {
     async getDataStatistical() {
       try {
-        let response = await this.axios.get("api/statistical");
+        let response = await this.axios.get(apiUrl.GET_STATISTICAL);
         let datas = response.data.list_book_day;
         let chart_total_book = [];
         let date = new Date();

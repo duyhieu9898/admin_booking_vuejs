@@ -39,8 +39,16 @@
     </div>
   </div>
 </template>
+
 <script>
+import seatchUser from '@/components/commons/SearchUser'
+import apiUrl from '../../constants/apiUrl';
+
 export default {
+  name: 'SentNotification',
+  components: {
+    seatchUser
+  },
   directives: {
     user: {
       bind: function (el, binding, vnode) {
@@ -66,7 +74,7 @@ export default {
           alertify.notify("You must fix all errors in the form ", "error", 7);
           return;
         }
-        await this.axios.post("api/sent-notification", this.message);
+        await this.axios.post(apiUrl.SEND_NOTIFICATION, this.message);
         this.title='';
         this.content='';
       } catch (error) {

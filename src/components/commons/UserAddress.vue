@@ -94,6 +94,7 @@
 
 <script>
 export default {
+  name: 'UserAddress',
   props: {
     user_id: {
       type: Number

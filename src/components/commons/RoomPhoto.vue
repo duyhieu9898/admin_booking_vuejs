@@ -58,14 +58,19 @@
           <div class="image-room">
             <img :src="asset(image.file_name)" :alt="image.original_name" />
           </div>
-          <a @click="deleteImage(image.id,index)" class="image--remove">Remove</a>
+          <a @click="deleteImage(image.id, index)" class="image--remove">Remove</a>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
+import apiUrl from '../../constants/apiUrl';
+import { asset } from '@/utils/helper'
+
 export default {
+  name: 'RoomPhoto',
   props: {
     room_id: {
       type: Number
@@ -81,82 +86,19 @@ export default {
     this.getListImages();
   },
   mounted() {
+    let urlPathUpload;
     if (this.room_id) {
-      var URL_PATH_UPLOAD =`${this.$host_name_server}/api/upload-image/${this.room_id}?api_token=${this.$token}`;
+      urlPathUpload =`${apiUrl. GET_IMAGES_BY_ROOM_ID.replace(':id', this.room_id)}?api_token=${this.$token}`;
     } else {
-      var URL_PATH_UPLOAD = `${this.$host_name_server}/api/store-image?api_token=${this.$token}`;
+      urlPathUpload = `${apiUrl.CREATE_IMAGE}?api_token=${this.$token}`
     }
-    var vm = this;
-    // default method post
-    var myDropzone = new Dropzone("#id_dropzone", {
-      url: URL_PATH_UPLOAD,
-      parallelUploads: 100,
-      maxFiles: 6,
-      maxFilesize: 5,
-      acceptedFiles: ".jpeg,.jpg,.png,.gif",
-      dictRemoveFile: "Remove",
-      dictFileTooBig: "Image is bigger than 5MB",
-      paramName: "file",
-      // The setting up of the dropzone
-      error: function(file, response) {
-        if ($.type(response) === "string") {
-          //dropzone sends it's own error messages in string
-          var message = response;
-        } else {
-          var message = response.message;
-        }
-
-        file.previewElement.classList.add("dz-error");
-        var _ref = file.previewElement.querySelectorAll(
-          "[data-dz-errormessage]"
-        );
-        var _results = [];
-
-        for (let _i = 0, _len = _ref.length; _i < _len; _i++) {
-          var node = _ref[_i];
-          _results.push((node.textContent = message));
-        }
-
-        return _results;
-      },
-      success: function(file, response) {
-        var html = `<div class="col-sm-4 text-sm-center " id="js-section-${response.image_id}">
-    <div class="image-room">
-        <img src="${file.dataURL}" alt="delete-booking.png">
-    </div>
-    <a class="js-remove-image image--remove" data-image-id="${response.image_id}">Remove</a>
-</div>`;
-        $(".photo-view > .row").append(html);
-
-        $(".js-remove-image").click(function(e) {
-          e.preventDefault();
-          var imageId = e.target.dataset.imageId;
-          $.ajax({
-            type: "delete",
-            url: vm.$host_name_server + "/api/delete-image/" + imageId,
-            headers: {
-              Authorization: `Bearer ${vm.$token}`
-            },
-            success: function(res) {
-              $("#js-section-" + imageId).remove();
-              //console.log(res.message)
-            },
-            error: function(res) {
-              //console.log(res.responseJSON);
-            }
-          });
-        });
-
-        vm.list_images_id.push(response.image_id);
-        vm.$emit("arr-images-id", vm.list_images_id);
-      }
-    });
+    this.initDropzone(urlPathUpload)
   },
   methods: {
     getListImages() {
       if (this.room_id) {
         this.axios
-          .get("/api/list-images/" + this.room_id)
+          .get(apiUrl.GET_IMAGES_BY_ROOM_ID.replace(':id', this.room_id))
           .then(response => {
             this.list_images = response.data;
           })
@@ -165,18 +107,85 @@ export default {
           });
       }
     },
-    deleteImage(imageId, index) {
-      this.axios
-        .delete("/api/delete-image/" + imageId)
-        .then(res => {
-          this.list_images.splice(index, 1);
-        })
-        .catch(err => {
-          console.log(err.response.data);
-        });
+    async deleteImage(imageId, index) {
+      try {
+        await this.axios.delete(apiUrl.DELETE_IMAGE_BY_ID.replace(':id', imageId))
+        this.list_images.splice(index, 1);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    },
+    initDropzone(urlPathUpload) {
+      var vm = this;
+      // default method post
+      var myDropzone = new Dropzone("#id_dropzone", {
+        url: urlPathUpload,
+        parallelUploads: 100,
+        maxFiles: 6,
+        maxFilesize: 5,
+        acceptedFiles: ".jpeg,.jpg,.png,.gif",
+        dictRemoveFile: "Remove",
+        dictFileTooBig: "Image is bigger than 5MB",
+        paramName: "file",
+        // The setting up of the dropzone
+        error: function(file, response) {
+          if ($.type(response) === "string") {
+            //dropzone sends it's own error messages in string
+            var message = response;
+          } else {
+            var message = response.message;
+          }
+
+          file.previewElement.classList.add("dz-error");
+          var _ref = file.previewElement.querySelectorAll(
+            "[data-dz-errormessage]"
+          );
+          var _results = [];
+
+          for (let _i = 0, _len = _ref.length; _i < _len; _i++) {
+            var node = _ref[_i];
+            _results.push((node.textContent = message));
+          }
+
+          return _results;
+        },
+        success: function(file, response) {
+          var html = `<div class="col-sm-4 text-sm-center " id="js-section-${response.image_id}">
+                        <div class="image-room">
+                            <img src="${file.dataURL}" alt="delete-booking.png">
+                        </div>
+                        <a class="js-remove-image image--remove" data-image-id="${response.image_id}">Remove</a>
+                    </div>`;
+          $(".photo-view > .row").append(html);
+
+          $(".js-remove-image").click(function(e) {
+            e.preventDefault();
+            var imageId = e.target.dataset.imageId;
+            $.ajax({
+              type: "delete",
+              url: vm.$host_name_server + "/api/images/" + imageId,
+              headers: {
+                Authorization: `Bearer ${vm.$token}`
+              },
+              success: function(res) {
+                $("#js-section-" + imageId).remove();
+                //console.log(res.message)
+              },
+              error: function(res) {
+                //console.log(res.responseJSON);
+              }
+            });
+          });
+
+          vm.list_images_id.push(response.image_id);
+          vm.$emit("arr-images-id", vm.list_images_id);
+        }
+      });
     },
     asset(fileName) {
-      return this.$host_name_server + fileName;
+      console.log(fileName);
+
+      return asset(fileName)
     }
   }
 };

@@ -92,5 +92,10 @@
         </li>
         </ul>
     </li>
-        
 </template>
+
+<script>
+export default {
+  name: 'notifications'
+}
+</script>

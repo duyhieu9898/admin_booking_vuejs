@@ -46,7 +46,6 @@
               name="phone"
               placeholder="Enter Phone"
               v-model="currentUser.phone"
-
             />
             <span v-show="errors.has('phone')" class="errors">{{ errors.first('phone') }}</span>
           </div>
@@ -54,13 +53,12 @@
         <div class="form-group row">
           <label class="control-label col-lg-3 text-right" for="tel">Address:</label>
           <div class="col-lg-9">
-            <user-address-component
+            <user-address
               @address-id="getAddressId"
               :user_id="currentUser.id"
               :address_id="currentUser.address_id"
               :is_edit="isEdit"
-            ></user-address-component>
-
+            ></user-address>
           </div>
         </div>
         <div class="form-group row">
@@ -76,9 +74,16 @@
     </div>
   </div>
 </template>
+
 <script>
+import userAddress from "@/components/commons/UserAddress";
+import apiUrl from "../../constants/apiUrl.js";
 
 export default {
+  name: "InfoUser",
+  components: {
+    userAddress
+  },
   data() {
     return {
       currentUser: {
@@ -125,8 +130,8 @@ export default {
     },
     getAddressId(id) {
       this.currentUser.address_id = id;
-    },
-  },
+    }
+  }
 };
 </script>
 

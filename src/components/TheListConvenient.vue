@@ -11,7 +11,7 @@
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
             <i class="fa fa-angle-right"></i>
           </li>
-          <li class="active">convenients</li>
+          <li class="active">conveniences</li>
         </ol>
       </div>
     </div>
@@ -102,7 +102,10 @@
 </template>
 
 <script>
+import apiUrl from '@/constants/apiUrl'
+
 export default {
+  name: 'RoomConveniences',
   data() {
     return {
       convenientCreate: {
@@ -115,18 +118,16 @@ export default {
     this.getListConvenient();
   },
   methods: {
-    getListConvenient() {
-      this.axios
-        .get("/api/convenients")
-        .then(response => {
-          this.list_convenient = response.data;
-          this.list_convenient.forEach(convenient => {
-            this.$set(convenient, "isEdit", false);
-          });
-        })
-        .catch(error => {
-          console.log(error.response);
+    async getListConvenient() {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_CONVENIENCES)
+        this.list_convenient = data;
+        this.list_convenient.forEach(convenient => {
+          this.$set(convenient, "isEdit", false);
         });
+      } catch (error) {
+        console.log(error.response);
+      }
     },
     async createconvenient() {
       try {
@@ -134,7 +135,7 @@ export default {
           alertify.notify("You must fix all errors in the form ", "error", 7);
           return;
         }
-        let responce = await this.axios.post("/api/convenients",this.convenientCreate);
+        let responce = await this.axios.post(apiUrl.CREATE_CONVENIENCE, this.convenientCreate);
         //update list convenient side client
         this.convenientCreate.id = responce.data.id;
         this.$set(this.convenientCreate, "isEdit", false);
@@ -154,7 +155,7 @@ export default {
           alertify.notify("You must fix all errors in the form ", "error", 7);
           return;
         }
-        await this.axios.put("/api/convenients/" + convenient.id, convenient);
+        await this.axios.put(apiUrl.UPDATE_CONVENIENCE_BY_ID.replace(':id', convenient.id), convenient);
         //send notify
         alertify.notify(`UPDATE convenient with id is "${convenient.id}"` , "success", 7);
         convenient.isEdit = false;
@@ -166,19 +167,19 @@ export default {
       }
       this.$validator.reset();
     },
-    deleteconvenient(convenient, index) {
-      this.isConfirmDelete(convenient.name)
-        .then(res => {
-          return this.axios.delete("/api/convenients/" + convenient.id);
-        })
-        .then(response => {
-          this.list_convenient.splice(index, 1);
-          this.$validator.reset();
-          alertify.notify(`DELETE convenient with name ${convenient.name}`, "warning", 7);
-        })
-        .catch(errors => {
-          console.log(errors.response);
-        });
+    async deleteconvenient(convenient, index) {
+      try {
+        await this.isConfirmDelete(convenient.name)
+        await this.axios.delete(apiUrl.DETETE_CONVENIENCE_BY_ID.replace(':id', convenient.id));
+        this.list_convenient.splice(index, 1);
+        this.$validator.reset();
+        alertify.notify(`DELETE convenient with name ${convenient.name}`, "warning", 7);
+      } catch (error) {
+        if(error.response) {
+          console.log(error.response);
+        }
+        console.log(error);
+      }
     },
     isConfirmDelete(nameconvenient) {
       return new Promise(function(resolve, reject) {
@@ -186,7 +187,7 @@ export default {
           {
             title: "Are you sure?",
             text:
-              "You will not be able to recover this convenient and convenients in rooms of !",
+              "You will not be able to recover this convenient and conveniences in rooms of !",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",

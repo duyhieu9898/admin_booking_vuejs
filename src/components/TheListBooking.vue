@@ -126,7 +126,10 @@
     </div>
   </div>
 </template>
+
 <script>
+import apiUrl from '@/constants/apiUrl'
+
 export default {
   data() {
     return {
@@ -163,7 +166,7 @@ export default {
   methods: {
     getListBooking() {
       this.axios
-        .get("api/bookings")
+        .get(apiUrl.GET_LIST_BOOKING)
         .then(response => {
           this.list_bookings = response.data.booking;
         })
@@ -174,7 +177,7 @@ export default {
     deleteBooking(booking_id, index) {
       this.isConfirmDelete(booking_id)
         .then(res => {
-          return this.axios.delete(`api/bookings/${booking_id}`);
+          return this.axios.delete(apiUrl.DETELE_BOOKING_BY_ID.replace(':id', booking_id));
         })
         .then(res => {
           this.list_bookings.splice(index, 1);

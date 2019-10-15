@@ -13,11 +13,13 @@
       </datalist>
   </div>
 </template>
+
 <script>
-import VueTagsInput from '@johmun/vue-tags-input';
+import VueTagsInput from '@johmun/vue-tags-input'
+import apiUrl from '@/constants/apiUrl'
 
 export default {
-
+  name: 'SearchUser',
   components: {
     VueTagsInput,
   },
@@ -31,9 +33,7 @@ export default {
   methods: {
     async findUserByNameOrId() {
       try {
-        console.log(this.value_search);
-
-        let response = await this.axios.get('api/search-users/'+ this.value_search);
+        let response = await this.axios.get(apiUrl.SEARCH_USER.replace(':meta', this.value_search));
         if(response.data) {
           this.list_result_search = response.data;
           console.log(response);

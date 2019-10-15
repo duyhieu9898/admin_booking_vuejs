@@ -91,21 +91,21 @@
 
                           <tbody>
                             <tr
-                              v-for="user_booking in list_user_bookings"
-                              :key="user_booking.id"
+                              v-for="userBooking in listUserBookings"
+                              :key="userBooking.id"
                               class="gradeX even"
                               role="row"
                             >
-                              <td class="user-circle-img sorting_1">{{ user_booking.id }}</td>
-                              <td class="center">{{ user_booking.name }}</td>
-                              <td class="center">{{ user_booking.phone }}</td>
+                              <td class="user-circle-img sorting_1">{{ userBooking.id }}</td>
+                              <td class="center">{{ userBooking.name }}</td>
+                              <td class="center">{{ userBooking.phone }}</td>
                               <td class="center">
-                                <a :href="'mailto:'+user_booking.email">{{ user_booking.email }}</a>
+                                <a :href="'mailto:'+userBooking.email">{{ userBooking.email }}</a>
                               </td>
-                              <td class="center">{{ user_booking.updated_at }}</td>
+                              <td class="center">{{ userBooking.updated_at }}</td>
                               <td class="center">
                                 <router-link
-                                  :to="{ name: 'user_booking-edit',params: { id: user_booking.user_id }}"
+                                  :to="{ name: 'userBooking-edit',params: { id: userBooking.user_id }}"
                                   class="btn btn-primary"
                                 >
                                   <i class="fa fa-pencil"></i>
@@ -129,32 +129,27 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   //check
   data() {
     return {
-      list_user_bookings: {}
-    };
+      listUserBookings: {}
+    }
   },
   created() {
-    this.getListuser_booking();
-
+    this.getListUserBooking()
   },
   methods: {
-    getListuser_booking() {
-
-
-      this.axios
-        .get("api/users/bookings")
-        .then(response => {
-
-          this.list_user_bookings = response.data.user_booking;
-        })
-        .catch(error => {
-          console.error(error.response);
-        });
+    async getListUserBooking() {
+      try {
+        const response = await this.axios.get("api/users/bookings")
+         this.listUserBookings = response.data.userBooking
+      } catch (error) {
+        console.error(error.response)
+      }
     }
   }
-};
+}
 </script>

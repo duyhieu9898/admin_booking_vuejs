@@ -98,6 +98,8 @@
 </template>
 
 <script>
+import apiUrl from '@/constants/apiUrl'
+
 export default {
   data() {
     return {
@@ -113,7 +115,7 @@ export default {
   methods: {
     getListcategories() {
       this.axios
-        .get("/api/categories/")
+        .get(apiUrl.GET_CATEGORIES)
         .then(response => {
           this.list_categories = response.data;
           this.list_categories.forEach(category => {
@@ -129,7 +131,7 @@ export default {
          alertify.notify("You must fix all errors in the form ", "error", 7);
       }
       this.axios
-        .post("/api/categories/", this.categoryCreate)
+        .post(apiUrl.CREATE_CATEGORY, this.categoryCreate)
         .then(response => {
           //send notify
           alertify.notify(`CREATE category with id is "${this.categoryCreate.id}"` , "success", 7);
@@ -154,7 +156,7 @@ export default {
           alertify.notify("You must fix all errors in the form ", "error", 7);
           return;
         }
-        await this.axios.put("/api/categories/" + category.id, category);
+        await this.axios.put(apiUrl.UPDATE_CATEGORY_BY_ID.replace(':id',  category.id), category);
         //send notify
         alertify.notify(`UPDATE category with id is "${category.id}"` , "success", 7);
         category.isEdit = false;
@@ -164,7 +166,7 @@ export default {
     },
     deletecategory(category, index) {
         this.isConfirmDelete(category.name).then(res => {
-            return this.axios.delete("/api/categories/" + category.id)
+            return this.axios.delete(apiUrl.DELETE_CATEGORY_BY_ID.replace(':id', category.id))
         })
         .then(response => {
           this.list_categories.splice(index, 1);

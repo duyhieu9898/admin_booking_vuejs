@@ -503,8 +503,6 @@ var App = function() {
   /******* Handle quick Chat sidebar ************/
 
   var handleQuickSidebarChat = function() {
-    console.log('bind');
-
       var wrapper = $('.chat-sidebar-container');
       var wrapperChat = wrapper.find('.chat-sidebar-chat');
 
@@ -576,23 +574,6 @@ var App = function() {
               }, 1000);
               return tpl;
           };
-
-          // handle post
-          var time = new Date();
-          var message = preparePost('out', (time.getHours() + ':' + time.getMinutes()), "Kiran Patel", '../assets/img/dp', text);
-          message = $(message);
-          chatContainer.append(message);
-
-
-          input.val("");
-
-          // simulate reply
-          setTimeout(function() {
-              var time = new Date();
-              var message = preparePost('in', (time.getHours() + ':' + time.getMinutes()), "Jacob Ryan", '../assets/img/user/user5', 'Lorem ipsum doloriam nibh...');
-              message = $(message);
-              chatContainer.append(message);
-          }, 2000);
       };
 
       wrapperChat.find('.chat-sidebar-chat-user-form .btn').on('click', handleChatMessagePost);

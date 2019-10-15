@@ -245,6 +245,9 @@
   </div>
 </template>
 <script>
+import apiUrl from '@/constants/apiUrl'
+import { asset } from '@/utils/helper'
+
 export default {
   data() {
     return {
@@ -264,39 +267,49 @@ export default {
   methods: {
     async getBookingById(booking_id) {
       try {
-        let response = await this.axios.get("api/bookings/" + booking_id);
+        let response = await this.axios.get(apiUrl.GET_BOOKING_BY_ID.relace(':id', booking_id));
         this.booking = response.data.booking;
         this.status_booking.name = response.data.booking.status_booking;
       } catch (error) {
         console.error(error.response);
       }
     },
-    async updateBooking(booking_id) {
+    updateBooking(booking_id) {
+      this.status_booking.isEdit = false;
+      if (this.status_booking.name == this.booking.status_booking) {
+        return;
+      }
+      this.callApiUpdateStatus(booking_id)
+      if (this.status_booking.name == "completed") {
+        this.$socket.emit("update-status-completed",  this.booking.booking_id);
+        this.callApiUpdatePeople()
+      }
+    },
+    async callApiUpdateStatus(booking_id) {
       try {
-        this.status_booking.isEdit = false;
-        if (this.status_booking.name == this.booking.status_booking) {
-          console.log("nothing");//
-        }
-        let status = await this.axios.post(`api/bookings/${booking_id}/status-update`, {
+        await this.axios.post(apiUrl.UPDATE_STATUS_BOOKING_BY_ID.replace(':id', booking_id), {
             status_name: this.status_booking.name
         });
-        if (this.status_booking.name == "completed") {
-            this.$socket.emit("update-status-completed",  this.booking.booking_id);
-            //update people
-            this.booking.room_peoples = this.booking.room_peoples + this.booking.tenants;
-            this.axios.post(`api/rooms/updatePeople`, {
-              room_id: this.booking.room_id,
-              number_people: this.booking.room_peoples
-            });
-          }
       } catch (error) {
-         console.error(error.response);
+        console.log(error);
+      }
+
+    },
+    async callApiUpdatePeople() {
+      try {
+        await this.axios.post(apiUrl.UPDATE_PEOPLE_ROOM, {
+          room_id: this.booking.room_id,
+          number_people: this.booking.room_peoples
+        });
+        this.booking.room_peoples = this.booking.room_peoples + this.booking.tenants;
+      } catch (error) {
+        console.log(error);
       }
     },
     deleteBooking(booking_id) {
       this.isConfirmDelete(booking_id)
         .then(res => {
-          return this.axios.delete(`api/bookings/${booking_id}`);
+          return this.axios.delete(apiUrl.DELETE_BOOKING.relace(':id', booking_id));
         })
         .then(res => {
           this.$router.go(-1);
@@ -343,9 +356,8 @@ export default {
       }
     },
     asset(fileName) {
-      return this.host_name + "/" + fileName;
-    },
-
+      return asset(fileName)
+    }
   }
 };
 </script>

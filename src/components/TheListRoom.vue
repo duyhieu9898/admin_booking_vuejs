@@ -194,7 +194,10 @@
     </div>
   </div>
 </template>
+
 <script>
+import apiUrl from '@/constants/apiUrl'
+
 export default {
   data() {
     return {
@@ -210,12 +213,12 @@ export default {
     };
   },
   created() {
-    this.getListRooms(1);
+    this.getListRoomsByPage(1);
   },
   methods: {
-    getListRooms(numPage) {
+    getListRoomsByPage(numPage = 1) {
       this.axios
-        .get(`/api/rooms?page=${numPage}`)
+        .get(apiUrl.GET_ROOMS_BY_PAGE.replace(':page', numPage))
         .then(response => {
           this.list_rooms = response.data.rooms;
           this.pagination = response.data.pagination;
@@ -227,7 +230,7 @@ export default {
     deleteRoom(room, index) {
       this.isComfirmDeLete()
         .then(res => {
-          return this.axios.delete("/api/rooms/" + room.id);
+          return this.axios.delete(apiUrl.DELETE_ROOM_BY_ID.replace(':id', room.id));
         })
         .then(response => {
           this.list_rooms.splice(index, 1);
@@ -244,7 +247,7 @@ export default {
     },
     changePage: function(page) {
       this.pagination.current_page = page;
-      this.getListRooms(page);
+      this.getListRoomsByPage(page);
     },
     isComfirmDeLete(callback) {
       return new Promise(function(resolve, reject) {
@@ -275,15 +278,15 @@ export default {
       });
     },
     activeChange(element) {
-        var value = element.value;
-        var roomId = element.srcEvent.target.parentElement.dataset.roomId;
+        const { value } = element
+        const roomId = element.srcEvent.target.parentElement.dataset.roomId;
         this.axios
-            .post(`/api/rooms/${roomId}/active`, {active : value})
+            .post(apiUrl.SET_ROOM_ACTIVE_BY_ID.replace(':id', roomId), {active : value})
             .then(response => {
-                console.log(response.data)
+              console.log(response.data)
             })
             .catch(error => {
-                console.error(error.response);
+              console.error(error.response);
             });
     }
   },
@@ -295,15 +298,15 @@ export default {
       if (!this.pagination.to) {
         return [];
       }
-      var from = this.pagination.current_page - this.offset;
+      let from = this.pagination.current_page - this.offset;
       if (from < 1) {
         from = 1;
       }
-      var to = from + this.offset * 2;
+      let to = from + this.offset * 2;
       if (to >= this.pagination.last_page) {
         to = this.pagination.last_page;
       }
-      var pagesArray = [];
+      let pagesArray = [];
       while (from <= to) {
         pagesArray.push(from);
         from++;

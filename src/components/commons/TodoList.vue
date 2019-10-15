@@ -70,7 +70,7 @@
                       class="task__action col-sm-3 btn-group justify-content-end"
                     >
                       <button
-                        @click="taskCompleted(taskTodo)"
+                        @click="updateTaskCompleted(taskTodo)"
                         class="btn btn-outline-success"
                         type="button"
                       >
@@ -150,6 +150,8 @@
 </template>
 <script >
 import moment from "moment-timezone";
+import apiUrl from "../../constants/apiUrl";
+
 export default {
   data() {
     return {
@@ -160,34 +162,34 @@ export default {
       listTask: [],
       task_todo: 0,
       task_completed: 0,
-      isShow: false,
+      isShow: false
     };
   },
   created() {
     this.getListTask();
   },
   methods: {
-    createTask() {
+    async createTask() {
       if (this.checkRequiredContentTask && this.task !== null) {
-        this.axios
-          .post("http://localhost:3000/task", { task: this.task })
-          .then(response => {
-
-            this.getListTask();
-            this.task = null;
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        try {
+          await this.axios.post(apiUrl.CREATE_TASK, { task: this.task });
+          this.getListTask();
+          this.task = null;
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
-    getListTask() {
-      this.axios.get("http://localhost:3000/task").then(response => {
-        this.listTask = response.data;
+    async getListTask() {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_TASK);
+        this.listTask = data;
         this.listTask.forEach(taskTodo => {
           this.$set(taskTodo, "isEdit", false);
         });
-      });
+      } catch (error) {
+        console.log(error);
+      }
     },
     formatTimeZone(fulltime = null) {
       let result = "";
@@ -197,57 +199,45 @@ export default {
       } else {
         result = moment().format("YYYY-MM-DD HH:mm:ss");
       }
-
       return result;
     },
-    taskCompleted(taskTodo) {
-      taskTodo.complete = true;
-      this.task_todo--;
-      this.axios
-        .put("http://localhost:3000/task/" + taskTodo._id, {
+    async updateTaskCompleted(taskTodo) {
+      try {
+        await this.axios.put(apiUrl.UPDATE_TASK_BY_ID.replace(":id", taskTodo._id), {
           complete: taskTodo.complete
-        })
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
         });
+        taskTodo.complete = true;
+        this.task_todo--;
+      } catch (error) {
+        console.log(error);
+      }
     },
-    updateTaskTodo(taskTodo) {
-      taskTodo.isEdit = false;
-      this.axios
-        .put("http://localhost:3000/task/" + taskTodo._id, {
+    async updateTaskTodo(taskTodo) {
+      try {
+        await this.axios.put(apiUrl.UPDATE_TASK_BY_ID.replace(":id", taskTodo._id), {
           content: taskTodo.content
-        })
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
         });
+        taskTodo.isEdit = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
-    deleteTaskTodo(taskTodo, index) {
-      this.axios
-        .delete("http://localhost:3000/task/" + taskTodo._id)
-        .then(response => {
-          this.listTask.splice(index, 1);
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    async deleteTaskTodo(taskTodo, index) {
+      try {
+        this.axios.delete(apiUrl.DETELE_TASK_BY_ID.replace(":id", taskTodo._id));
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   computed: {
     numTask() {
       return this.listTask.length;
-    },
+    }
   },
   watch: {
     numTask() {
       //when numTask chane then handle count task_todo and task_complete
-      //*console.log('numTask computed changed');
       let sum = 0;
       for (let value of this.listTask) {
         if (value.complete == false) sum++;
@@ -273,7 +263,6 @@ export default {
 };
 </script>
 <style lang="css" >
-
 .errorMessage {
   width: 200px;
   height: 30px;

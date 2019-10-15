@@ -23,7 +23,7 @@
           <div class="card-header">Todo List</div>
           <div class="card-body">
             <div class="row">
-              <todo-list-component></todo-list-component>
+              <todo-list></todo-list>
             </div>
           </div>
         </div>
@@ -41,3 +41,19 @@
     </div>
   </div>
 </template>
+
+<script>
+import stateOverview from "@/components/commons/StateOverview"
+import chartBooking from "@/components/commons/ChartBooking"
+import todoList from "@/components/commons/TodoList"
+import sentNotification from '@/components/commons/SentNotification';
+
+export default {
+  components: {
+    stateOverview,
+    chartBooking,
+    todoList,
+    sentNotification
+  }
+}
+</script>

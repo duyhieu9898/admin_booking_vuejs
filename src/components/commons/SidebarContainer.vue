@@ -66,7 +66,7 @@
             <li class="nav-item js-route-link">
                 <router-link :to="{ name: 'list-convenient'}">
                 <i class="material-icons">store</i>
-                <span class="title">Convenients</span>
+                <span class="title">Conveniences</span>
                 <span class="selected"></span>
               </router-link>
             </li>
@@ -75,18 +75,15 @@
       </div>
     </div>
 </template>
+
 <script>
+import { mapGetters } from 'vuex'
 export default {
-  data() {
-    return {
-      currentUser:{
-          name:''
-      }
-    };
-  },
-  created() {
-    this.getCurrentUser();
-    //this.getStatistical();
+  name: 'SideBarContainer',
+  computed: {
+    ...mapGetters([
+      'currentUser'
+      ])
   },
   mounted() {
     $(".js-route-link").click(function(e) {
@@ -94,17 +91,5 @@ export default {
       e.currentTarget.classList.add("active");
     });
   },
-  methods: {
-    getCurrentUser() {
-      this.axios
-        .get("/api/getCurrentUser")
-        .then(response => {
-          this.currentUser = response.data;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-  }
 };
 </script>

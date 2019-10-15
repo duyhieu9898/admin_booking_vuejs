@@ -29,7 +29,7 @@
         <!-- start header menu -->
         <div class="top-menu">
           <ul class="nav navbar-nav pull-right">
-            <notification-component />
+            <notification />
             <!-- start manage user dropdown -->
             <li class="dropdown dropdown-user">
               <a
@@ -66,29 +66,20 @@
       </div>
     </div>
 </template>
+
 <script>
+import notification from '@/components/commons/Notification'
+import { mapGetters } from 'vuex';
+
 export default {
-  data() {
-    return {
-      currentUser:{
-        name:''
-      }
-    };
+  name: 'HeaderComponent',
+  components: {
+    notification
   },
-  created() {
-    this.getCurrentUser();
-  },
-  methods: {
-    getCurrentUser() {
-      this.axios
-        .get("/api/getCurrentUser")
-        .then(response => {
-          this.currentUser = response.data;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
+  computed: {
+    ...mapGetters([
+      'currentUser'
+    ])
   }
 };
 </script>
