@@ -36,8 +36,8 @@
                         <td v-if="checkIsAdmin">Action</td>
                       </tr>
                     </thead>
-                    <tbody v-if="listUser.length">
-                      <tr v-for="(user, index) in listUser" v-bind:key="user.id">
+                    <tbody v-if="getListUser.length">
+                      <tr v-for="(user, index) in getListUser" v-bind:key="user.id">
                         <td>{{ user.id }}</td>
                         <td v-if="!user.isEdit">{{ user.name }}</td>
                         <td v-else>
@@ -93,12 +93,12 @@
                           <button class="btn btn-info" @click="user.isEdit = true">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                           </button>
-                          <button class="btn btn-danger" @click="deleteUser(user,index)">
+                          <button class="btn btn-danger" @click="deleteUser({'userID':user.id, index})">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                           </button>
                         </td>
                         <td v-else-if="checkIsAdmin">
-                          <button class="btn btn-success" @click="updateUser(user)">Save</button>
+                          <button class="btn btn-success" @click="callUpdateUser(user)">Save</button>
                           <button class="btn btn-danger" @click="user.isEdit = false ">Cancel</button>
                         </td>
                       </tr>
@@ -150,8 +150,8 @@
                       </select>
                     </div>
                     <div class="col-md-2">
-                      <button class="btn btn-primary" @click="createUser">Create</button>
-                      <button class="btn btn-warning" @click="resetFormUserCreate">Reset</button>
+                      <button class="btn btn-primary" @click="callCreateUser()">Create</button>
+                      <button class="btn btn-warning" @click="resetFormUserCreate()">Reset</button>
                     </div>
                   </div>
                 </div>
@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import apiUrl from '@/constants/apiUrl'
 
 export default {
@@ -182,26 +182,8 @@ export default {
   computed: {
     ...mapGetters([
       'currentUser',
-      'listUser'
-    ])
-  },
-  methods: {
-    ...mapGetters([
-      'createUser',
-      'updateUser',
-      'deleteUser'
+      'getListUser'
     ]),
-    resetFormUserCreate() {
-      this.$validator.reset();
-      this.userCreate = {
-        name: null,
-        email: null,
-        phone: null,
-        role: "customer"
-      };
-    }
-  },
-  computed: {
     checkIsAdmin() {
       if (this.currentUser.roles) {
         let check = false;
@@ -213,6 +195,51 @@ export default {
         return check;
       }
     }
-  }
+  },
+  methods: {
+    ...mapActions([
+      'createUser',
+      'callAPIUpdateUser',
+      'deleteUser'
+    ]),
+    resetFormUserCreate() {
+      this.$validator.reset();
+      this.userCreate = {
+        name: null,
+        email: null,
+        phone: null,
+        role: "customer"
+      };
+    },
+    async callCreateUser() {
+      await this.$validator.validate();
+      if (this.errors.any()) {
+        alertify.notify("You must fix all errors in the form ", "error", 7);
+        return;
+      }
+      this.createUser(this.userCreate)
+    },
+    async callUpdateUser(user) {
+      try {
+        await this.$validator.validateAll("user-" + user.id);
+        if (this.errors.any()) {
+          alertify.notify("You must fix all errors in the form ", "error", 7);
+          return;
+        }
+        await this.callAPIUpdateUser(user)
+        user.isEdit = false
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+  watch: {
+    currentUser() {
+      setInterval(() => {
+        console.log('lenght', this.getListUser.length);
+      }, 1000);
+
+    }
+  },
 };
 </script>

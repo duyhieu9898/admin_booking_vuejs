@@ -267,7 +267,7 @@ export default {
   methods: {
     async getBookingById(booking_id) {
       try {
-        let response = await this.axios.get(apiUrl.GET_BOOKING_BY_ID.relace(':id', booking_id));
+        let response = await this.axios.get(apiUrl.GET_BOOKING_BY_ID.replace(':id', booking_id));
         this.booking = response.data.booking;
         this.status_booking.name = response.data.booking.status_booking;
       } catch (error) {
@@ -309,7 +309,7 @@ export default {
     deleteBooking(booking_id) {
       this.isConfirmDelete(booking_id)
         .then(res => {
-          return this.axios.delete(apiUrl.DELETE_BOOKING.relace(':id', booking_id));
+          return this.axios.delete(apiUrl.DELETE_BOOKING.replace(':id', booking_id));
         })
         .then(res => {
           this.$router.go(-1);

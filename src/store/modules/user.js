@@ -1,7 +1,7 @@
 import apiUrl from "../../constants/apiUrl";
 
 const state = {
-  listUser: null,
+  listUser: [],
   currentUser: {
     id: null,
     name: null,
@@ -17,7 +17,7 @@ const state = {
 };
 
 const getters = {
-  listUser(state) {
+  getListUser(state) {
     return state.listUser
   },
   currentUser(state) {
@@ -27,7 +27,7 @@ const getters = {
 };
 
 const actions = {
- getCurrentUser({ commit }) {
+ setCurrentUser({ commit }) {
     return new Promise(async (resolve, reject) => {
       try {
         let response = await this._vm.axios.get(apiUrl.GET_CURRENT_USER);
@@ -40,7 +40,7 @@ const actions = {
     })
 
   },
-  getListUser({ commit }) {
+  setListUser({ commit }) {
     return new Promise(async (resolve, reject) => {
       try {
         let response = await this._vm.axios.get(apiUrl.GET_USERS)
@@ -57,7 +57,7 @@ const actions = {
   },
   async createUser({ commit }, userItem) {
     try {
-      let response = await this._vm.axios.post(apiUrl.CREATE_USER, userItem.id);
+      let response = await this._vm.axios.post(apiUrl.CREATE_USER, userItem);
       //send notify
       alertify.notify(`CREATE success user with name is "${userItem.name}"`, "success", 7);
       //update list user side client
@@ -66,31 +66,40 @@ const actions = {
       this._vm.$set(userItem, "isEdit", false);
       commit('INSERT_USER_ITEM', userItem)
     } catch (error) {
-      console.log(error.response);
       alertify.notify('There was an unexpected error', "error", 7);
+      //debug
+      const error = error.response ? error.response : error
+      console.log(error);
     }
   },
-  async updateUser(user) {
-    try {
-      await this._vm.axios.put(apiUrl.UPDATE_USER_BY_ID.replace(':id',  user.id), {
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        roleId: user.roles[0].id
-      });
-    } catch (error) {
-      console.log(error.response);
-      alertify.notify('There was an unexpected error', "error", 7);
-    }
+  async callAPIUpdateUser({ commit }, user) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this._vm.axios.put(apiUrl.UPDATE_USER_BY_ID.replace(':id',  user.id), {
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          roleId: user.roles[0].id
+        });
+        alertify.notify(`UPDATE success user with id is "user.id"`, "success", 7);
+        resolve('callAPIUpdateUser success')
+      } catch (error) {
+        alertify.notify('There was an unexpected error', "error", 7);
+        reject('callAPIUpdateUser', error)
+      }
+    })
   },
-  async deleteUser({ commit }, user, index) {
+  async deleteUser({ commit }, data) {
     try {
-      await this.axios.delete(apiUrl.DELETE_USER_BY_ID.replace(':id', user.id));
-      alertify.notify("DELETE user with id is " + user.id, "warning", 7);
+      const { userID, index } = data
+      await this._vm.axios.delete(apiUrl.DELETE_USER_BY_ID.replace(':id', userID));
+      alertify.notify("DELETE user with id is " + userID, "warning", 7);
       commit('REMOVE_USER_ITEM', index)
     } catch (error) {
       alertify.notify('There was an unexpected error', "error", 7);
-      console.log(errors.response);
+      //debug
+      const error = error.response ? error.response : error
+      console.log(error);
     }
   },
 };
@@ -106,6 +115,8 @@ const mutations = {
     state.listUser.push(userItem)
   },
   REMOVE_USER_ITEM(state, index) {
+    console.log('index', index);
+
     state.listUser.splice(index, 1);
   }
 };

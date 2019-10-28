@@ -77,15 +77,10 @@ import { mapGetters } from 'vuex';
   },
     methods: {
       listenerMessage () {
-        console.log(this.currentUser);
-
-        console.log('newMessage-' + this.receiver.id + '-' + this.currentUser.id);
-
         const channel = this.pusher.subscribe('newMessage-' + this.receiver.id + '-' + this.currentUser.id) // newMessage-[chatting-with-who]-[my-id]
         const app = this;
 
         channel.bind('App\\Events\\MessageSent', function (data) {
-          console.log(this);
           app.messages.push(data.message)
           app.scrollChatBottom()
         })

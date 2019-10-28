@@ -75,10 +75,13 @@ export default {
           return;
         }
         await this.axios.post(apiUrl.SEND_NOTIFICATION, this.message);
-        this.title='';
-        this.content='';
+        this.message.title='';
+        this.message.content='';
+        this.$validator.reset();
+        //!TODO fix pusher message
       } catch (error) {
         console.log(error);
+        console.log(error.response);
       }
     }
   },

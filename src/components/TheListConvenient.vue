@@ -112,73 +112,73 @@ export default {
         name: null
       },
       list_convenient: []
-    };
+    }
   },
   created() {
-    this.getListConvenient();
+    this.getListConvenient()
   },
   methods: {
     async getListConvenient() {
       try {
         const { data } = await this.axios.get(apiUrl.GET_CONVENIENCES)
-        this.list_convenient = data;
+        this.list_convenient = data
         this.list_convenient.forEach(convenient => {
-          this.$set(convenient, "isEdit", false);
-        });
+          this.$set(convenient, "isEdit", false)
+        })
       } catch (error) {
-        console.log(error.response);
+        console.log(error.response)
       }
     },
     async createconvenient() {
       try {
         if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7);
-          return;
+          alertify.notify("You must fix all errors in the form ", "error", 7)
+          return
         }
-        let responce = await this.axios.post(apiUrl.CREATE_CONVENIENCE, this.convenientCreate);
+        let responce = await this.axios.post(apiUrl.CREATE_CONVENIENCE, this.convenientCreate)
         //update list convenient side client
-        this.convenientCreate.id = responce.data.id;
-        this.$set(this.convenientCreate, "isEdit", false);
-        this.list_convenient.push(this.convenientCreate);
+        this.convenientCreate.id = responce.data.id
+        this.$set(this.convenientCreate, "isEdit", false)
+        this.list_convenient.push(this.convenientCreate)
         //send notify
-        alertify.notify(`CREATE convenient with id is "${this.convenientCreate.id}"` , "success", 7);
+        alertify.notify(`CREATE convenient with id is "${this.convenientCreate.id}"` , "success", 7)
         //reset form value
-        this.convenientCreate = {};
-        this.$validator.reset();
+        this.convenientCreate = {}
+        this.$validator.reset()
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
     async updateconvenient(convenient) {
       try {
         if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7);
-          return;
+          alertify.notify("You must fix all errors in the form ", "error", 7)
+          return
         }
-        await this.axios.put(apiUrl.UPDATE_CONVENIENCE_BY_ID.replace(':id', convenient.id), convenient);
+        await this.axios.put(apiUrl.UPDATE_CONVENIENCE_BY_ID.replace(':id', convenient.id), convenient)
         //send notify
-        alertify.notify(`UPDATE convenient with id is "${convenient.id}"` , "success", 7);
-        convenient.isEdit = false;
+        alertify.notify(`UPDATE convenient with id is "${convenient.id}"` , "success", 7)
+        convenient.isEdit = false
       } catch (error) {
-        console.log(error.response);
+        console.log(error.response)
         if(typeof error.response.data.errors == "object") {
-          alertify.notify(error.response.data.errors.name[0] , "error", 7);
+          alertify.notify(error.response.data.errors.name[0] , "error", 7)
         }
       }
-      this.$validator.reset();
+      this.$validator.reset()
     },
     async deleteconvenient(convenient, index) {
       try {
         await this.isConfirmDelete(convenient.name)
-        await this.axios.delete(apiUrl.DETETE_CONVENIENCE_BY_ID.replace(':id', convenient.id));
-        this.list_convenient.splice(index, 1);
-        this.$validator.reset();
-        alertify.notify(`DELETE convenient with name ${convenient.name}`, "warning", 7);
+        await this.axios.delete(apiUrl.DELETE_CONVENIENCE_BY_ID.replace(':id', convenient.id))
+        this.list_convenient.splice(index, 1)
+        this.$validator.reset()
+        alertify.notify(`DELETE convenient with name ${convenient.name}`, "warning", 7)
       } catch (error) {
         if(error.response) {
-          console.log(error.response);
+          console.log(error.response)
         }
-        console.log(error);
+        console.log(error)
       }
     },
     isConfirmDelete(nameconvenient) {
@@ -197,16 +197,16 @@ export default {
           },
           function(isConfirm) {
             if (isConfirm) {
-              resolve("delete success");
+              resolve("delete success")
             } else {
-              reject("canelled delete");
+              reject("canelled delete")
             }
           }
-        );
-      });
+        )
+      })
     }
   }
-};
+}
 </script>
 <style >
 .errors-create-convenient > p {

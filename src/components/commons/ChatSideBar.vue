@@ -14,7 +14,7 @@
                           <div class="chat-header"><h5 class="list-heading">Online</h5></div>
                           <ul class="media-list list-items" >
                               <li
-                                v-for="user in listUser"
+                                v-for="user in getListUser"
                                 :key="user.id"
                                 @click="openChat(user.id)"
                                 class="media"
@@ -48,7 +48,7 @@
                           </ul>
                       </div><div class="slimScrollBar" style="background: rgb(158, 165, 171) none repeat scroll 0% 0%; width: 5px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 171.138px;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
                   </div>
-                  <template v-for="user in listUser">
+                  <template v-for="user in getListUser">
                     <chat-box
                       v-show="chatUserID === user.id"
                       :onLoad="chatUserID === user.id"
@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'listUser',
+      'getListUser',
       'currentUser'
     ]),
   },
@@ -99,7 +99,7 @@ export default {
     }
   },
   watch: {
-    listUser: function() {
+    getListUser: function() {
       this.$nextTick(() => {
         App.handleQuickSidebarChat()
       })

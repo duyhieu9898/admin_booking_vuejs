@@ -41,7 +41,7 @@ import constants from './constants/config'
 //         console.log("ok:", e)
 //     });
 //config for app
-const token = '97c3654d6ed26a5b18285ba174022fbb00b5e83f52145cd789574bd1cd6cd1e1'
+const token = 'aac7be0fadb22ce91215aac89b01003a1d873899edc6c10b0212aba24b40b885'
 axios.defaults.baseURL = constants.SERVER_ADDRESS
 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';

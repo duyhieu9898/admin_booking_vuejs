@@ -21,25 +21,33 @@ export default {
     footerComponent,
     chatSideBar
   },
-  data() {
-    return {
-
-    }
-  },
   async created() {
-    await this.getCurrentUser()
-    await this.getListUser()
+    try {
+      this.checkAuthentication()
+      await this.setCurrentUser()
+      await this.setListUser()
+    } catch (error) {
+      console.log('rrr', error);
+    }
   },
   computed: {
     notAuthScreen() {
       return this.$route.name !== 'login';
-    }
+    },
+
   },
   methods: {
     ...mapActions([
-      'getListUser',
-      'getCurrentUser'
+      'setListUser',
+      'setCurrentUser'
     ]),
+    checkAuthentication() {
+      return new Promise((resolve, reject) => {
+        if(this.$route.query.api_token) {
+
+        }
+      })
+    }
   }
 }
 </script>

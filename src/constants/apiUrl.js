@@ -16,7 +16,7 @@ export default {
   DELETE_IMAGE_BY_ID:  `${config.SERVER_ADDRESS}/api/images/:id`,
   CREATE_IMAGE:  `${config.SERVER_ADDRESS}/api/images`,
   //
-  GET_USERS: `${config.SERVER_ADDRESS}/api/users/`,
+  GET_USERS: `${config.SERVER_ADDRESS}/api/users`,
   SEARCH_USER: `${config.SERVER_ADDRESS}/api/search-users/:meta`,
   GET_USER_BY_ID: `${config.SERVER_ADDRESS}/api/users/:id`,
   GET_CURRENT_USER: `${config.SERVER_ADDRESS}/api/getCurrentUser`,
@@ -24,7 +24,7 @@ export default {
   UPDATE_USER_BY_ID: `${config.SERVER_ADDRESS}/api/users/:id`,
   DELETE_USER_BY_ID: `${config.SERVER_ADDRESS}/api/users/:id`,
   //
-  SEND_NOTIFICATION: `${config.SERVER_ADDRESS}api/send-notification`,
+  SEND_NOTIFICATION: `${config.SERVER_ADDRESS}/api/send-notification`,
   GET_ADDRESS_BY_ID: `${config.SERVER_ADDRESS}/api/addresses/:id`,
   GET_LIST_BOOKING: `${config.SERVER_ADDRESS}/api/bookings`,
   GET_BOOKING_BY_ID: `${config.SERVER_ADDRESS}/api/bookings/:id`,
@@ -33,10 +33,10 @@ export default {
   GET_USERS_BOOKING: `${config.SERVER_ADDRESS}/api/users/list-booking`,
   UPDATE_STATUS_BOOKING_BY_ID: `${config.SERVER_ADDRESS}/api/bookings/:id/status-update/`,
   //
-  GET_TASK: `${config.SERVER_ADDRESS}api/task`,
-  CREATE_TASK: `${config.SERVER_ADDRESS}api/task`,
-  UPDATE_TASK_BY_ID: `${config.SERVER_ADDRESS}api/task/:id`,
-  DELETE_TASK_BY_ID: `${config.SERVER_ADDRESS}api/task/:id`,
+  GET_TASK: `${config.SERVER_ADDRESS}/api/task`,
+  CREATE_TASK: `${config.SERVER_ADDRESS}/api/task`,
+  UPDATE_TASK_BY_ID: `${config.SERVER_ADDRESS}/api/task/:id`,
+  DELETE_TASK_BY_ID: `${config.SERVER_ADDRESS}/api/task/:id`,
   //
   GET_CATEGORIES:  `${config.SERVER_ADDRESS}/api/categories`,
   CREATE_CATEGORY: `${config.SERVER_ADDRESS}/api/categories`,

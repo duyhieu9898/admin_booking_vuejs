@@ -29,7 +29,7 @@
                     <div class="row">
                       <div class="col-md-9">
                         <input
-                          v-validate="'required|min:6|max:36'"
+                          v-validate="'required|min:5|max:36'"
                           name="category"
                           type="text"
                           v-model="categoryCreate.name"
