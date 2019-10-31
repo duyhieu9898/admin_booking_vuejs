@@ -70,6 +70,13 @@
                 <span class="selected"></span>
               </router-link>
             </li>
+            <li class="nav-item js-route-link">
+                <router-link :to="{ name: 'basic-information'}">
+                <i class="material-icons">store</i>
+                <span class="title">Basic infomation</span>
+                <span class="selected"></span>
+              </router-link>
+            </li>
           </ul>
         </div>
       </div>

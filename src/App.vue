@@ -12,7 +12,7 @@ import headerComponent from './components/layout/Header'
 import containerComponent from './components/layout/Container.vue'
 import footerComponent from './components/layout/Footer.vue'
 import chatSideBar from './components/commons/ChatSideBar.vue'
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
   components: {
@@ -21,32 +21,43 @@ export default {
     footerComponent,
     chatSideBar
   },
-  async created() {
-    try {
+  data() {
+    return {
+      isLogin: false
+    }
+  },
+  created() {
+    if (this.notAuthScreen) {
       this.checkAuthentication()
-      await this.setCurrentUser()
-      await this.setListUser()
-    } catch (error) {
-      console.log('rrr', error);
+      this.setCurrentUser()
+      this.setListUser()
     }
   },
   computed: {
+    ...mapGetters([
+      'apiToken'
+    ]),
     notAuthScreen() {
       return this.$route.name !== 'login';
     },
-
   },
   methods: {
     ...mapActions([
+      'setApiToken',
       'setListUser',
       'setCurrentUser'
     ]),
+    ...mapMutations([
+      'SET_API_TOKEN'
+    ]),
     checkAuthentication() {
-      return new Promise((resolve, reject) => {
-        if(this.$route.query.api_token) {
-
-        }
-      })
+      const apiToken = this.$route.query.api_token || localStorage.getItem('api_token')
+      if (apiToken) {
+        this.setApiToken(apiToken)
+      }
+      else {
+        this.$router.push({ name: 'login'})
+      }
     }
   }
 }

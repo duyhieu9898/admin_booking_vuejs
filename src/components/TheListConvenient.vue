@@ -42,7 +42,7 @@
                         >{{ errors.first('convenient') }}</span>
                       </div>
                       <div class="col-md-3">
-                        <button class="btn btn-primary" @click="createconvenient">Create</button>
+                        <button class="btn btn-primary" @click="createConvenient">Create</button>
                       </div>
                     </div>
                   </div>
@@ -79,13 +79,13 @@
                           </button>
                           <button
                             class="btn btn-danger"
-                            @click="deleteconvenient(convenient,index)"
+                            @click="deleteConvenient(convenient,index)"
                           >
                             <i class="fa fa-trash-o"></i>
                           </button>
                         </td>
                         <td v-else>
-                          <button class="btn btn-primary" @click="updateconvenient(convenient)">Save</button>
+                          <button class="btn btn-primary" @click="updateConvenient(convenient)">Save</button>
                           <button class="btn btn-danger" @click="convenient.isEdit = false ">Cancel</button>
                         </td>
                       </tr>
@@ -129,7 +129,7 @@ export default {
         console.log(error.response)
       }
     },
-    async createconvenient() {
+    async createConvenient() {
       try {
         if (this.errors.any()) {
           alertify.notify("You must fix all errors in the form ", "error", 7)
@@ -149,7 +149,7 @@ export default {
         console.log(error)
       }
     },
-    async updateconvenient(convenient) {
+    async updateConvenient(convenient) {
       try {
         if (this.errors.any()) {
           alertify.notify("You must fix all errors in the form ", "error", 7)
@@ -167,7 +167,7 @@ export default {
       }
       this.$validator.reset()
     },
-    async deleteconvenient(convenient, index) {
+    async deleteConvenient(convenient, index) {
       try {
         await this.isConfirmDelete(convenient.name)
         await this.axios.delete(apiUrl.DELETE_CONVENIENCE_BY_ID.replace(':id', convenient.id))

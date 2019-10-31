@@ -41,13 +41,13 @@ import constants from './constants/config'
 //         console.log("ok:", e)
 //     });
 //config for app
-const token = 'aac7be0fadb22ce91215aac89b01003a1d873899edc6c10b0212aba24b40b885'
+// console.log(store.dispatch('apiToken'));
+
+
 axios.defaults.baseURL = constants.SERVER_ADDRESS
-axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 //
 Vue.config.productionTip = false
-Vue.prototype.$token = token
     //Overwriting messages errors
 const dictionary = {
     en: {
@@ -76,7 +76,7 @@ Vue.use(VeeValidate, {
 Vue.use(VueAxios, axios);
 
 //create new instance app
-const vm = new Vue({
+ window.AppVue = new Vue({
     el: '#app',
     router,
     store,

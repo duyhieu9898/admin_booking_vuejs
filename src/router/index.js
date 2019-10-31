@@ -9,6 +9,7 @@ import TheListBooking from '@/components/TheListBooking'
 import TheBookingDetail from '@/components/TheBookingDetail'
 import TheListCategory from '@/components/TheListCategory'
 import TheListConvenient from '@/components/TheListConvenient'
+import TheBasicInformation from '@/components/TheBasicInformation'
 import TheLogin from '@/components/TheLogin'
 import NotFound from '@/components/TheNotFound'
 Vue.use(Router)
@@ -64,6 +65,11 @@ export default new Router({
             path: '/admin/conveniences',
             name: 'list-convenient',
             component: TheListConvenient
+        },
+        {
+          path: '/admin/basic-information',
+          name: 'basic-information',
+          component: TheBasicInformation
         },
         {
           name: '404',

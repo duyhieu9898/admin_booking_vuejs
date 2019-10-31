@@ -56,4 +56,7 @@ export default {
   DELETE_ROOM_BY_ID: `${config.SERVER_ADDRESS}/api/rooms/:id`,
   SET_ROOM_ACTIVE_BY_ID: `${config.SERVER_ADDRESS}/api/rooms/:id/active`,
   UPDATE_PEOPLE_ROOM: `${config.SERVER_ADDRESS}/api/rooms/updatePeople`,
+  //
+  GET_BASIC_INFORMATION:  `${config.SERVER_ADDRESS}/api/basic-information`,
+  UPDATE_BASIC_INFORMATION_BY_ID: `${config.SERVER_ADDRESS}/api/basic-information/:id`,
 };

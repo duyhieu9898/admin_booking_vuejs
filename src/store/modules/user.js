@@ -1,4 +1,7 @@
-import apiUrl from "../../constants/apiUrl";
+import apiUrl from "../../constants/apiUrl"
+import axios from "axios"
+import Vue from 'vue'
+import { checkStatusError } from '@/commons/request'
 
 const state = {
   listUser: [],
@@ -23,19 +26,21 @@ const getters = {
   currentUser(state) {
     return state.currentUser
   },
-
+  apiToken(state) {
+    return state.api_token
+  }
 };
 
 const actions = {
- setCurrentUser({ commit }) {
+  setCurrentUser({ commit }) {
     return new Promise(async (resolve, reject) => {
       try {
         let response = await this._vm.axios.get(apiUrl.GET_CURRENT_USER);
         let currentUser = response.data;
         commit('SET_CURRENT_USER', currentUser)
-        resolve()
+        resolve(currentUser)
       } catch (error) {
-        reject('get-current-user', error)
+        checkStatusError(error.response)
       }
     })
 
@@ -49,9 +54,9 @@ const actions = {
           this._vm.$set(user, "isEdit", false);
         });
         commit('SET_LIST_USER', listUser)
-        resolve()
+        resolve(listUser)
       } catch (error) {
-        reject('get-list-user', error)
+        checkStatusError(error.response)
       }
     })
   },
@@ -102,6 +107,11 @@ const actions = {
       console.log(error);
     }
   },
+  setApiToken({ commit }, token) {
+    Vue.prototype.$token = token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    commit('SET_API_TOKEN', token)
+  }
 };
 
 const mutations = {
@@ -115,9 +125,10 @@ const mutations = {
     state.listUser.push(userItem)
   },
   REMOVE_USER_ITEM(state, index) {
-    console.log('index', index);
-
     state.listUser.splice(index, 1);
+  },
+  SET_API_TOKEN(state, token) {
+    state.api_token = token
   }
 };
 
