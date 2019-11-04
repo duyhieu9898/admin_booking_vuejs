@@ -38,7 +38,7 @@ export default {
       'apiToken'
     ]),
     notAuthScreen() {
-      return this.$route.name !== 'login';
+      return this.$route.name !== 'login' && this.$route.name !== '404';
     },
   },
   methods: {
