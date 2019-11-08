@@ -41,13 +41,13 @@
 </template>
 
 <script>
-import seatchUser from '@/components/commons/SearchUser'
+import searchUser from '@/components/commons/SearchUser'
 import apiUrl from '../../constants/apiUrl';
 
 export default {
   name: 'SentNotification',
   components: {
-    seatchUser
+    searchUser
   },
   directives: {
     user: {

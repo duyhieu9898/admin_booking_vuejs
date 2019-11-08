@@ -7,12 +7,12 @@
             <i class="material-icons">style</i>
           </span>
           <div class="info-box-content">
-            <span class="info-box-text">Room</span>
+            <span class="info-box-text">Phòng</span>
             <span class="info-box-number">{{ datas.total_room }}</span>
             <div class="progress">
               <div class="progress-bar width-60"></div>
             </div>
-            <span class="progress-description">Number Of Room</span>
+            <span class="progress-description">Số phòng trong khách sạn</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -25,12 +25,12 @@
             <i class="material-icons">card_travel</i>
           </span>
           <div class="info-box-content">
-            <span class="info-box-text">New Booking</span>
+            <span class="info-box-text">Đặt phòng</span>
             <span class="info-box-number">{{ datas.total_booking }}</span>
             <div class="progress">
               <div class="progress-bar width-40"></div>
             </div>
-            <span class="progress-description">Number of Booking In Month</span>
+            <span class="progress-description">Sô đơn đặt phòng trong tháng</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -43,12 +43,12 @@
             <i class="material-icons">phone_in_talk</i>
           </span>
           <div class="info-box-content">
-            <span class="info-box-text">User</span>
+            <span class="info-box-text">Người dùng</span>
             <span class="info-box-number">{{ datas.total_user }}</span>
             <div class="progress">
               <div class="progress-bar width-80"></div>
             </div>
-            <span class="progress-description">Number Of People</span>
+            <span class="progress-description">Số người dùng</span>
           </div>
           <!-- /.info-box-content -->
         </div>
@@ -61,13 +61,13 @@
             <i class="material-icons">monetization_on</i>
           </span>
           <div class="info-box-content">
-            <span class="info-box-text">Total Earning</span>
+            <span class="info-box-text">Thu nhập</span>
             <span class="info-box-number">{{ datas.total_earning_month }}</span>
             <span>VND</span>
             <div class="progress">
               <div class="progress-bar width-60"></div>
             </div>
-            <span class="progress-description">Total Earing In Month</span>
+            <span class="progress-description">Tổng thu nhập trong tháng</span>
           </div>
           <!-- /.info-box-content -->
         </div>

@@ -3,7 +3,7 @@
       <div class="col-lg-12">
       <div class="card-box">
         <div class="card-header">
-           <header>Chart Booking In Month</header>
+           <header>Biểu đồ đặt phòng trong tháng</header>
         </div>
         <div class="card-body">
           <apex-chart type="area" :height="500" :options="chartOptions" :series="series"></apex-chart>

@@ -22,7 +22,7 @@
                 </div>
                 <div class="profile-usertitle">
                   <div class="sidebar-userpic-name">{{ currentUser.name }}</div>
-                  <div class="profile-usertitle-job">Manager</div>
+                  <div class="profile-usertitle-job">Quản trị</div>
                 </div>
               </div>
             </li>
@@ -31,49 +31,49 @@
             </li>
             <li class="nav-item start js-route-link">
               <router-link :to="{ name: 'dash-board'}" class="nav-link nav-toggle">
-                <span class="title">Dashboard</span>
+                <span class="title">Thống kê</span>
                 <span class="selected"></span>
               </router-link>
             </li>
             <li class="nav-item js-route-link">
               <router-link :to="{ name: 'list-category'}">
                 <i class="material-icons">widgets</i>
-                <span class="title">Category</span>
+                <span class="title">Quản lý thể loại</span>
                 <span class="selected"></span>
               </router-link>
             </li>
             <li class="nav-item js-route-link">
               <router-link :to="{ name: 'list-booking'}">
                 <i class="material-icons">business_center</i>
-                <span class="title">Booking</span>
+                <span class="title">Quản lý đặt phòng</span>
                 <span class="selected"></span>
               </router-link>
             </li>
             <li class="nav-item js-route-link">
               <router-link :to="{ name: 'list-room'}" class="nav-link nav-toggle">
                 <i class="material-icons">vpn_key</i>
-                <span class="title">Rooms</span>
+                <span class="title">Quản lý phòng</span>
                 <span class="selected"></span>
               </router-link>
             </li>
             <li class="nav-item js-route-link">
               <router-link :to="{ name: 'list-user'}">
                 <i class="material-icons">group</i>
-                <span class="title">User</span>
+                <span class="title">Quản lý người dùng</span>
                 <span class="selected"></span>
               </router-link>
             </li>
             <li class="nav-item js-route-link">
                 <router-link :to="{ name: 'list-convenient'}">
                 <i class="material-icons">store</i>
-                <span class="title">Conveniences</span>
+                <span class="title">Quản lý tiện ích</span>
                 <span class="selected"></span>
               </router-link>
             </li>
             <li class="nav-item js-route-link">
                 <router-link :to="{ name: 'basic-information'}">
                 <i class="material-icons">store</i>
-                <span class="title">Basic infomation</span>
+                <span class="title">Thông tin cơ bản</span>
                 <span class="selected"></span>
               </router-link>
             </li>

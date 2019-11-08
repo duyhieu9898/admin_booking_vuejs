@@ -4,8 +4,7 @@
         <!-- logo start -->
         <div class="page-logo">
           <a href="#">
-            <img alt src="/static/img/logo.png" />
-            <span class="logo-default">Motel</span>
+            <span class="logo-default">HOMO SAPIENS</span>
           </a>
         </div>
         <!-- logo end -->
