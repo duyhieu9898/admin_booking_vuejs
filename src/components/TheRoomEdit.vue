@@ -7,13 +7,13 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li>
             <router-link :to="{ name: 'list-room'}" class="title">Room&nbsp;</router-link>
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">Edit Room Details</li>
         </ol>
@@ -26,11 +26,11 @@
             <header>Room No {{ room.id }}</header>
             <div class="col-lg-10">
               <div class="pull-right">
-                <a @click="$router.go(-1)" class="btn btn-primary">Back</a>
+                <a class="btn btn-primary" @click="$router.go(-1)">Back</a>
               </div>
             </div>
             <div class="mdl-menu__container is-upgraded">
-              <div class="mdl-menu__outline mdl-menu--bottom-right"></div>
+              <div class="mdl-menu__outline mdl-menu--bottom-right" />
               <ul
                 class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events"
                 data-mdl-for="panel-button"
@@ -43,7 +43,7 @@
                 >
                   <i class="material-icons">assistant_photo</i>Action
                   <span class="mdl-menu__item-ripple-container">
-                    <span class="mdl-ripple"></span>
+                    <span class="mdl-ripple" />
                   </span>
                 </li>
                 <li
@@ -53,7 +53,7 @@
                 >
                   <i class="material-icons">print</i>Another action
                   <span class="mdl-menu__item-ripple-container">
-                    <span class="mdl-ripple"></span>
+                    <span class="mdl-ripple" />
                   </span>
                 </li>
                 <li
@@ -63,7 +63,7 @@
                 >
                   <i class="material-icons">favorite</i>Something else here
                   <span class="mdl-menu__item-ripple-container">
-                    <span class="mdl-ripple"></span>
+                    <span class="mdl-ripple" />
                   </span>
                 </li>
               </ul>
@@ -82,24 +82,19 @@
                         style="width: 124px;"
                       >
                         <select
+                          v-model="room.category_id"
                           v-validate="{ required: true, regex: /\d/ }"
                           name="category"
-                          v-model="room.category_id"
                           class="mdl-textfield__input category-room"
                         >
                           <option
                             v-for="category in categories"
-                            v-if="category.id == room.category_id"
                             :key="category.id"
                             :value="category.id"
-                            checked
-                          >{{ category.name }}</option>
-                          <option
-                            v-for="category in categories"
-                            v-if="category.id != room.category_id"
-                            :key="category.id"
-                            :value="category.id"
-                          >{{ category.name }}</option>
+                            :checked="category.id == room.category_id"
+                          >
+                            {{ category.name }}
+                          </option>
                         </select>
                         <label for="category-room" class="pull-right margin-0">
                           <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
@@ -117,12 +112,12 @@
                         data-upgraded=",MaterialTextfield"
                       >
                         <input
+                          v-model.trim="room.title"
                           v-validate="'required|min:6|max:96'"
                           name="title"
                           type="text"
                           class="mdl-textfield__input"
-                          v-model.trim="room.title"
-                        />
+                        >
                         <label class="mdl-textfield__label">Room Title</label>
                         <span
                           v-show="errors.has('title')"
@@ -137,13 +132,13 @@
                       >
                         <!-- <input type="number" class="mdl-textfield__input"  v-model.number="dataRoomEdit.area"> -->
                         <money
+                          v-model="room.room_area"
                           v-validate="'min_value:10'"
                           name="area"
-                          v-model="room.room_area"
                           v-bind="size"
                           class="mdl-textfield__input"
                           maxlength="6"
-                        ></money>
+                        />
                         <label class="mdl-textfield__label">Room Area</label>
                         <span v-show="errors.has('area')" class="errors">{{ errors.first('area') }}</span>
                       </div>
@@ -154,13 +149,13 @@
                         data-upgraded=",MaterialTextfield"
                       >
                         <money
+                          v-model="room.maximum_peoples_number"
                           v-validate="'min_value:1'"
                           name="people"
-                          v-model="room.maximum_peoples_number"
                           v-bind="people"
                           class="mdl-textfield__input"
                           maxlength="15"
-                        ></money>
+                        />
                         <label class="mdl-textfield__label">Room People</label>
                         <span
                           v-show="errors.has('people')"
@@ -175,13 +170,13 @@
                       >
                         <!-- <input type="number"  v-model.lazy="dataRoomEdit.price" > -->
                         <money
+                          v-model="room.price"
                           v-validate="'max_value:99999999'"
                           name="price"
-                          v-model="room.price"
                           v-bind="money"
                           class="mdl-textfield__input"
                           maxlength="15"
-                        ></money>
+                        />
                         <label class="mdl-textfield__label">Room Price</label>
                         <span
                           v-show="errors.has('price')"
@@ -190,13 +185,13 @@
                       </div>
                     </div>
                     <div class="col-lg-6 p-t-20">
-                      <room-address :address_id="room.address_id"></room-address>
+                      <room-address :address-id="room.address_id" />
                       <input
-                        type="hidden"
-                        v-validate="'required'"
-                        name="address_room"
                         v-model="room.address_id"
-                      />
+                        v-validate="'required'"
+                        type="hidden"
+                        name="address_room"
+                      >
                       <span
                         v-show="errors.has('address_room')"
                         class="errors"
@@ -212,16 +207,16 @@
                 <div class="card-header">Room Description</div>
 
                 <ckeditor
-                  :editor="editor"
                   v-model.lazy.trim="room.description"
+                  :editor="editor"
                   :config="editorConfig"
-                ></ckeditor>
-                <input
-                  type="hidden"
-                  v-validate="'required|min:50|max:1000'"
-                  name="description"
-                  v-model="room.description"
                 />
+                <input
+                  v-model="room.description"
+                  v-validate="'required|min:50|max:1000'"
+                  type="hidden"
+                  name="description"
+                >
                 <span
                   v-show="errors.has('description')"
                   class="errors"
@@ -233,16 +228,16 @@
                 <div class="card-header">Room Police And Term</div>
 
                 <ckeditor
-                  :editor="editor"
                   v-model.lazy.trim="room.police_and_terms"
+                  :editor="editor"
                   :config="editorConfig"
-                ></ckeditor>
-                <input
-                  type="hidden"
-                  v-validate="'required|min:50|max:1000'"
-                  name="police_and_terms"
-                  v-model="room.police_and_terms"
                 />
+                <input
+                  v-model="room.police_and_terms"
+                  v-validate="'required|min:50|max:1000'"
+                  type="hidden"
+                  name="police_and_terms"
+                >
                 <span
                   v-show="errors.has('police_and_terms')"
                   class="errors"
@@ -256,15 +251,15 @@
                   <div class="row">
                     <room-conveniences
                       :conveniences="conveniences"
-                      :conveniencesRoom="list_conveniences_id"
+                      :conveniences-room="list_conveniences_id"
                       @arr-conveniences-id="getArrConvenientId"
-                    ></room-conveniences>
-                    <input
-                      type="hidden"
-                      v-validate="'required'"
-                      name="convenient_room"
-                      v-model="list_conveniences_id"
                     />
+                    <input
+                      v-model="list_conveniences_id"
+                      v-validate="'required'"
+                      type="hidden"
+                      name="convenient_room"
+                    >
                     <span
                       v-show="errors.has('convenient_room')"
                       class="errors"
@@ -274,26 +269,26 @@
               </div>
             </div>
             <div class="col-lg-12 p-t-20">
-              <room-photo :room_id="room.id"></room-photo>
+              <room-photo :room-id="room.id" />
             </div>
             <div class="col-lg-12 p-t-20 text-center">
               <button
-                @click="updateRoom()"
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
+                @click="updateRoom()"
               >
                 SAVE
                 <span class="mdl-button__ripple-container">
-                  <span class="mdl-ripple"></span>
+                  <span class="mdl-ripple" />
                 </span>
               </button>
               <button
-                @click="resetForm"
                 type="button"
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
+                @click="resetForm"
               >
                 RESET
                 <span class="mdl-button__ripple-container">
-                  <span class="mdl-ripple"></span>
+                  <span class="mdl-ripple" />
                 </span>
               </button>
             </div>
@@ -305,10 +300,11 @@
 </template>
 
 <script>
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import roomPhoto from "@/components/commons/RoomPhoto";
-import roomConveniences from "@/components/commons/RoomConveniences";
-import roomAddress from "@/components/commons/RoomAddress";
+/* global alertify */
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import roomPhoto from '@/components/commons/RoomPhoto'
+import roomConveniences from '@/components/commons/RoomConveniences'
+import roomAddress from '@/components/commons/RoomAddress'
 import apiUrl from '@/constants/apiUrl'
 
 export default {
@@ -317,20 +313,20 @@ export default {
     roomConveniences,
     roomAddress
   },
-  data() {
+  data () {
     return {
       editor: ClassicEditor,
       editorConfig: {
         toolbar: [
-          "heading",
-          "|",
-          "bold",
-          "italic",
-          "link",
-          "bulletedList",
-          "numberedList",
-          "blockQuote",
-          "insertTable"
+          'heading',
+          '|',
+          'bold',
+          'italic',
+          'link',
+          'bulletedList',
+          'numberedList',
+          'blockQuote',
+          'insertTable'
         ]
       },
       categories: [],
@@ -340,63 +336,63 @@ export default {
         id: 0,
         address_id: 0,
         category_id: 0,
-        description: "",
+        description: '',
         maximum_peoples_number: 0,
-        police_and_terms: "",
+        police_and_terms: '',
         price: 0,
         room_area: 0,
-        title: "",
+        title: '',
         list_conveniences_id: []
       },
       money: {
-        decimal: ",",
-        thousands: ",",
-        suffix: " VNĐ",
+        decimal: ',',
+        thousands: ',',
+        suffix: ' VNĐ',
         precision: 0,
         masked: false
       },
       size: {
-        decimal: ",",
-        thousands: ",",
+        decimal: ',',
+        thousands: ',',
         precision: 0,
-        suffix: " M",
+        suffix: ' M',
         masked: false
       },
       people: {
-        decimal: ",",
-        thousands: ",",
+        decimal: ',',
+        thousands: ',',
         precision: 0,
-        suffix: " Pleople/Room",
+        suffix: ' Pleople/Room',
         masked: false
       }
-    };
+    }
   },
-  created() {
-    this.room.id = parseInt(this.$route.params.id);
-    this.getRoom();
+  created () {
+    this.room.id = parseInt(this.$route.params.id)
+    this.getRoom()
   },
   methods: {
-    async getRoom(roomId) {
+    async getRoom (roomId) {
       try {
-        const { data } = await this.axios.get(apiUrl.GET_DATA_EDIT_ROOM_BY_ID.replace(":id", this.room.id));
+        const { data } = await this.axios.get(apiUrl.GET_DATA_EDIT_ROOM_BY_ID.replace(':id', this.room.id))
 
-        this.room = data.room;
-        this.categories = data.categories;
-        this.list_conveniences_id = data.arrListConveniencesId;
-        this.conveniences = data.conveniences;
+        this.room = data.room
+        this.categories = data.categories
+        this.list_conveniences_id = data.arrListConveniencesId
+        this.conveniences = data.conveniences
       } catch (error) {
-        console.error(errors.response.data);
+        console.error(error.response.data)
       }
     },
-    //!listen event emit
-    getArrConvenientId(arrConveniences) {
-      this.list_conveniences_id = arrConveniences;
+    //! listen event emit
+    getArrConvenientId (arrConveniences) {
+      this.list_conveniences_id = arrConveniences
     },
-    async updateRoom() {
-      await this.$validator.validate();
+    async updateRoom () {
+      await this.$validator.validate()
       if (this.errors.any()) {
-        alertify.notify("You must fix all errors in the form ", "error", 7);
-        return;
+        alertify.notify('You must fix all errors in the form ', 'error', 7)
+        return
       }
       try {
         await this.axios.put(apiUrl.UPDATE_ROOM_BY_ID.replace(':id', this.room.id), {
@@ -408,18 +404,18 @@ export default {
           police_and_terms: this.room.police_and_terms,
           description: this.room.description,
           list_conveniences_id: this.list_conveniences_id
-        });
-        alertify.notify("UPDATE room success", "success", 7);
+        })
+        alertify.notify('UPDATE room success', 'success', 7)
       } catch (error) {
-        console.log(error.response.data);
+        console.log(error.response.data)
       }
     },
-    resetForm() {
-      this.$validator.reset();
-      this.getRoom();
+    resetForm () {
+      this.$validator.reset()
+      this.getRoom()
     }
   }
-};
+}
 </script>
 <style>
 @import "../../static/plugins/dropzone/dropzone.css";

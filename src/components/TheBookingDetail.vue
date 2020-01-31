@@ -7,9 +7,9 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">Booking</li>
         </ol>
@@ -19,10 +19,10 @@
       <div class="col-md-12">
         <div class="card card-box">
           <div class="card-head">
-            <header>Booking No {{ booking.booking_id }}</header>
+            <header>Booking No {{ booking.bookingId }}</header>
             <div class="col-md-10 col-sm-10 col-10">
               <div class="pull-right">
-                <a @click="$router.go(-1)" class="btn btn-primary">Back</a>
+                <a class="btn btn-primary" @click="$router.go(-1)">Back</a>
               </div>
             </div>
           </div>
@@ -42,8 +42,8 @@
                           style="position: relative; overflow: auto; width: 100%;"
                         >
                           <table
-                            class="table table-hover table-checkable order-column full-width dataTable no-footer"
                             id="booking-table"
+                            class="table table-hover table-checkable order-column full-width dataTable no-footer"
                             role="grid"
                             aria-describedby="booking-table_info"
                             style="width: 1550px;"
@@ -90,8 +90,8 @@
                                 <td class="center">{{ booking.user_email }}</td>
                                 <td class="center">{{ booking.tenants }}</td>
                                 <td class="center">{{ booking.date_booking }}</td>
-                                <td class="center">{{ booking.arrival_date}}</td>
-                                <td class="center">{{ booking.departure_date}}</td>
+                                <td class="center">{{ booking.arrival_date }}</td>
+                                <td class="center">{{ booking.departure_date }}</td>
 
                                 <!-- <td class="center">
                                 <router-link
@@ -131,8 +131,8 @@
                           style="position: relative; overflow: auto; width: 100%;"
                         >
                           <table
-                            class="table table-hover table-checkable order-column full-width dataTable no-footer"
                             id="booking-table"
+                            class="table table-hover table-checkable order-column full-width dataTable no-footer"
                             role="grid"
                             aria-describedby="booking-table_info"
                             style="width: 1550px;"
@@ -169,13 +169,15 @@
                                 <td class="center">{{ booking.room_id }}</td>
                                 <td class="center">
                                   <div class="box-image">
-                                    <img :src="asset(booking.room_image_link)" alt />
+                                    <img :src="asset(booking.room_image_link)" alt>
                                   </div>
                                 </td>
                                 <td class="center">{{ booking.room_title }}</td>
                                 <td
                                   class="center"
-                                >{{ booking.room_peoples}}/{{ booking.room_people_max }}</td>
+                                >
+                                  {{ booking.room_peoples }}/{{ booking.room_people_max }}
+                                </td>
                                 <td class="center">{{ booking.room_price }}</td>
                                 <td class="center">{{ booking.room_area }}</td>
                                 <td class="center">{{ booking.room_province }}</td>
@@ -217,22 +219,26 @@
 
                     <button
                       class="btn btn-danger btn block"
-                      @click="deleteBooking(booking.booking_id)"
-                    >Delete This Booking</button>
+                      @click="deleteBooking(booking.bookingId)"
+                    >
+                      Delete This Booking
+                    </button>
                   </div>
-                  <div class="col-lg-5" v-else>
+                  <div v-else class="col-lg-5">
                     <div class="row">
                       <strong>Status Booking:</strong>
-                      <select class="form-control col-lg-4" v-model.lazy="status_booking.name">
-                        <option value="pending" v-if="status_booking.name==='pending'">pending</option>
-                        <option value="completed" >completed</option>
+                      <select v-model.lazy="status_booking.name" class="form-control col-lg-4">
+                        <option v-if="status_booking.name==='pending'" value="pending">pending</option>
+                        <option value="completed">completed</option>
                         <option value="cancelled">cancelled</option>
                       </select>
                       <button
                         class="btn btn-success"
-                        @click="updateBooking(booking.booking_id)"
-                      >Save</button>
-                      <button class="btn btn-danger" @click="status_booking.isEdit = false ">Cancel</button>
+                        @click="updateBooking(booking.bookingId)"
+                      >
+                        Save
+                      </button>
+                      <button class="btn btn-danger" @click="status_booking.isEdit = false">Cancel</button>
                     </div>
                   </div>
                 </div>
@@ -245,121 +251,122 @@
   </div>
 </template>
 <script>
+/* global swal */
+
 import apiUrl from '@/constants/apiUrl'
 import { asset } from '@/utils/helper'
 
 export default {
-  data() {
+  data () {
     return {
       booking: {},
-      host_name: "",
+      host_name: '',
       status_booking: {
         isEdit: false,
-        name: ""
+        name: ''
       }
-    };
+    }
   },
-  created() {
-    this.host_name = window.location.origin;
-    this.booking_id = parseInt(this.$route.params.id);
-    this.getBookingById(this.booking_id);
+  created () {
+    this.host_name = window.location.origin
+    this.bookingId = parseInt(this.$route.params.id)
+    this.getBookingById(this.bookingId)
   },
   methods: {
-    async getBookingById(booking_id) {
+    async getBookingById (bookingId) {
       try {
-        let response = await this.axios.get(apiUrl.GET_BOOKING_BY_ID.replace(':id', booking_id));
-        this.booking = response.data.booking;
-        this.status_booking.name = response.data.booking.status_booking;
+        const response = await this.axios.get(apiUrl.GET_BOOKING_BY_ID.replace(':id', bookingId))
+        this.booking = response.data.booking
+        this.status_booking.name = response.data.booking.status_booking
       } catch (error) {
-        console.error(error.response);
+        console.error(error.response)
       }
     },
-    updateBooking(booking_id) {
-      this.status_booking.isEdit = false;
-      if (this.status_booking.name == this.booking.status_booking) {
-        return;
+    updateBooking (bookingId) {
+      this.status_booking.isEdit = false
+      if (this.status_booking.name === this.booking.status_booking) {
+        return
       }
-      this.callApiUpdateStatus(booking_id)
-      if (this.status_booking.name == "completed") {
-        this.$socket.emit("update-status-completed",  this.booking.booking_id);
+      this.callApiUpdateStatus(bookingId)
+      if (this.status_booking.name === 'completed') {
+        this.$socket.emit('update-status-completed', this.booking.bookingId)
         this.callApiUpdatePeople()
       }
     },
-    async callApiUpdateStatus(booking_id) {
+    async callApiUpdateStatus (bookingId) {
       try {
-        await this.axios.post(apiUrl.UPDATE_STATUS_BOOKING_BY_ID.replace(':id', booking_id), {
-            status_name: this.status_booking.name
-        });
+        await this.axios.post(apiUrl.UPDATE_STATUS_BOOKING_BY_ID.replace(':id', bookingId), {
+          status_name: this.status_booking.name
+        })
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-
     },
-    async callApiUpdatePeople() {
+    async callApiUpdatePeople () {
       try {
         await this.axios.post(apiUrl.UPDATE_PEOPLE_ROOM, {
           room_id: this.booking.room_id,
           number_people: this.booking.room_peoples
-        });
-        this.booking.room_peoples = this.booking.room_peoples + this.booking.tenants;
+        })
+        this.booking.room_peoples = this.booking.room_peoples + this.booking.tenants
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
-    deleteBooking(booking_id) {
-      this.isConfirmDelete(booking_id)
+    deleteBooking (bookingId) {
+      this.isConfirmDelete(bookingId)
         .then(res => {
-          return this.axios.delete(apiUrl.DELETE_BOOKING.replace(':id', booking_id));
+          return this.axios.delete(apiUrl.DELETE_BOOKING.replace(':id', bookingId))
         })
         .then(res => {
-          this.$router.go(-1);
+          this.$router.go(-1)
         })
         .catch(err => {
-          console.log(err.response);
-        });
+          console.log(err.response)
+        })
     },
-    isConfirmDelete(idBooking) {
-      return new Promise(function(resolve, reject) {
+    isConfirmDelete (idBooking) {
+      return new Promise(function (resolve, reject) {
         swal(
           {
-            title: "Are you sure?",
+            title: 'Are you sure?',
             text: `You will not be able to recover booking no ${idBooking}!`,
-            type: "warning",
+            type: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: `Yes, delete this booking!`,
-            cancelButtonText: "No, cancel",
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, delete this booking!',
+            cancelButtonText: 'No, cancel',
             closeOnConfirm: false
           },
-          function(isConfirm) {
+          function (isConfirm) {
             if (isConfirm) {
               swal(
-                "Deleted!",
+                'Deleted!',
                 `booking no "${idBooking}" has been deleted.`,
-                "success"
-              );
-              resolve("delete success");
+                'success'
+              )
+              resolve('delete success')
             } else {
-              reject("canelled delete");
+              reject('canelled delete')
             }
           }
-        );
-      });
+        )
+      })
     },
-    setLableByStatus(status) {
-      if (status == "pending") {
-        return "label-info";
-      } else if (status == "completed") {
-        return "label-success";
+    setLableByStatus (status) {
+      if (status === 'pending') {
+        return 'label-info'
+      } else if (status === 'completed') {
+        return 'label-success'
       } else {
-        return "label-warning";
+        return 'label-warning'
       }
     },
-    asset(fileName) {
+    asset (fileName) {
       return asset(fileName)
     }
   }
-};
+}
 </script>
 <style>
 .box-image > img {

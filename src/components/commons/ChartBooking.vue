@@ -1,12 +1,12 @@
 <template>
   <div class="row">
-      <div class="col-lg-12">
+    <div class="col-lg-12">
       <div class="card-box">
         <div class="card-header">
-           <header>Biểu đồ đặt phòng trong tháng</header>
+          <header>Biểu đồ đặt phòng trong tháng</header>
         </div>
         <div class="card-body">
-          <apex-chart type="area" :height="500" :options="chartOptions" :series="series"></apex-chart>
+          <apex-chart type="area" :height="500" :options="chartOptions" :series="series" />
         </div>
       </div>
     </div>
@@ -21,11 +21,11 @@ export default {
   components: {
     apexChart
   },
-  data: function() {
+  data: function () {
     return {
       series: [
         {
-          name: "total book",
+          name: 'total book',
           data: []
         }
       ],
@@ -35,35 +35,35 @@ export default {
           enabled: false
         },
         stroke: {
-          curve: "smooth"
+          curve: 'smooth'
         },
         xaxis: {
-          type: "datetime",
+          type: 'datetime',
           categories: [
           ]
         },
         tooltip: {
           x: {
-            format: "dd/MM/yyyy"
+            format: 'dd/MM/yyyy'
           }
         }
       }
-    };
+    }
   },
-  created() {
-    this.getDataStatistical();
+  created () {
+    this.getDataStatistical()
   },
   methods: {
-    async getDataStatistical() {
+    async getDataStatistical () {
       try {
-        let response = await this.axios.get(apiUrl.GET_STATISTICAL);
-        let datas = response.data.list_book_day;
-        let chart_total_book = [];
-        let date = new Date();
+        const response = await this.axios.get(apiUrl.GET_STATISTICAL)
+        const datas = response.data.list_book_day
+        const chartTotalBook = []
+        const date = new Date()
         //
-        let arrCategory = [];
+        const arrCategory = []
         for (let i = 1; i <= this.daysInMonth(date.getMonth(), date.getFullYear()); i++) {
-          arrCategory.push(`${date.getFullYear()}-${date.getMonth() + 1}-${i}`);
+          arrCategory.push(`${date.getFullYear()}-${date.getMonth() + 1}-${i}`)
         }
 
         this.chartOptions = {
@@ -73,24 +73,24 @@ export default {
               categories: arrCategory
             }
           }
-        };
+        }
         //
         for (let index = 1; index <= date.getDate(); index++) {
-          chart_total_book.push(0);
+          chartTotalBook.push(0)
         }
 
         datas.forEach(element => {
-          chart_total_book[element.day - 1] = element.totalBook;
-        });
+          chartTotalBook[element.day - 1] = element.totalBook
+        })
 
-        this.series[0].data = chart_total_book;
+        this.series[0].data = chartTotalBook
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
-    daysInMonth(month, year) {
-      return new Date(year, month, 0).getDate();
+    daysInMonth (month, year) {
+      return new Date(year, month, 0).getDate()
     }
   }
-};
+}
 </script>

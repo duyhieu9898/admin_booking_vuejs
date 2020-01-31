@@ -7,11 +7,11 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">
               Home
             </router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">Rooms</li>
         </ol>
@@ -23,18 +23,18 @@
           <div class="card-head">
             <header>All Rooms</header>
             <div class="tools">
-              <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-              <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-              <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+              <a class="fa fa-repeat btn-color box-refresh" href="javascript:;" />
+              <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;" />
+              <a class="t-close btn-color fa fa-times" href="javascript:;" />
             </div>
           </div>
           <div class="card-body">
             <div class="row p-b-20">
               <div class="col-md-6 col-sm-6 col-6">
                 <div class="btn-group">
-                  <router-link :to="{ name: 'room-create' }" id="addRow" class="btn btn-info">
+                  <router-link id="addRow" :to="{ name: 'room-create' }" class="btn btn-info">
                     Add New
-                    <i class="fa fa-plus"></i>
+                    <i class="fa fa-plus" />
                   </router-link>
                 </div>
               </div>
@@ -48,8 +48,8 @@
                     style="position: relative; overflow: auto; width: 100%;"
                   >
                     <table
-                      class="table table-hover table-checkable order-column full-width dataTable no-footer"
                       id="table-rooms"
+                      class="table table-hover table-checkable order-column full-width dataTable no-footer"
                       role="grid"
                       aria-describedby="example4_info"
                       style="width: 1550px;"
@@ -108,33 +108,34 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="gradeX" v-for="(room, index) in list_rooms" :key="room.id">
+                        <tr v-for="(room, index) in list_rooms" :key="room.id" class="gradeX">
                           <td class="center">{{ room.id }}</td>
                           <td class="text-primary">{{ room.category.name }}</td>
                           <td>{{ room.title }}</td>
-                          <td class="center">{{ room.number_peoples+'/'+room.maximum_peoples_number  }}</td>
+                          <td class="center">{{ room.number_peoples+'/'+room.maximum_peoples_number }}</td>
                           <td class="center">{{ room.address.province.name }}</td>
                           <td class="center">
-                              <toggle-button
-                                :data-room-id="room.id"
-                                :value="room.active == 1"
-                                :labels="{checked: 'Show', unchecked: 'Hide'}"
-                                :width="60"
-                                @change="activeChange"/>
-                            </td>
+                            <toggle-button
+                              :data-room-id="room.id"
+                              :value="room.active == 1"
+                              :labels="{checked: 'Show', unchecked: 'Hide'}"
+                              :width="60"
+                              @change="activeChange"
+                            />
+                          </td>
                           <td class="center">
                             <router-link
                               :to="{ name: 'room-edit',params: { id: room.id }}"
                               class="btn btn-tbl-edit btn-xs"
                             >
-                              <i class="fa fa-pencil"></i>
+                              <i class="fa fa-pencil" />
                             </router-link>
                             <a
-                              @click="deleteRoom(room, index)"
                               href="#"
                               class="btn btn-tbl-delete btn-xs"
+                              @click="deleteRoom(room, index)"
                             >
-                              <i class="fa fa-trash-o"></i>
+                              <i class="fa fa-trash-o" />
                             </a>
                           </td>
                         </tr>
@@ -147,14 +148,16 @@
             <div class="row">
               <div class="col-sm-12 col-md-5">
                 <div
-                  class="dataTables_info"
                   id="example4_info"
+                  class="dataTables_info"
                   role="status"
                   aria-live="polite"
-                >Showing 1 to 10 of 12 entries</div>
+                >
+                  Showing 1 to 10 of 12 entries
+                </div>
               </div>
               <div class="col-sm-12 col-md-7">
-                <div class="dataTables_paginate paging_simple_numbers" id="example4_paginate">
+                <div id="example4_paginate" class="dataTables_paginate paging_simple_numbers">
                   <ul class="pagination">
                     <li
                       :class="[ pagination.current_page === 1 ? 'disabled' : '']"
@@ -165,9 +168,9 @@
                       </a>
                     </li>
                     <li
-                      class="page-item paginate_button"
                       v-for="page in pagesNumber"
                       :key="page"
+                      class="page-item paginate_button"
                       :class="[ page == isActived ? 'active' : '']"
                     >
                       <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
@@ -196,10 +199,11 @@
 </template>
 
 <script>
+/* global swal */
 import apiUrl from '@/constants/apiUrl'
 
 export default {
-  data() {
+  data () {
     return {
       list_rooms: [],
       pagination: {
@@ -210,109 +214,109 @@ export default {
         current_page: 1
       },
       offset: 4
-    };
-  },
-  created() {
-    this.getListRoomsByPage(1);
-  },
-  methods: {
-    getListRoomsByPage(numPage = 1) {
-      this.axios
-        .get(apiUrl.GET_ROOMS_BY_PAGE.replace(':page', numPage))
-        .then(response => {
-          this.list_rooms = response.data.rooms;
-          this.pagination = response.data.pagination;
-        })
-        .catch(error => {
-          console.error(error.response);
-        });
-    },
-    deleteRoom(room, index) {
-      this.isComfirmDeLete()
-        .then(res => {
-          return this.axios.delete(apiUrl.DELETE_ROOM_BY_ID.replace(':id', room.id));
-        })
-        .then(response => {
-          this.list_rooms.splice(index, 1);
-        })
-        .catch(errors => {
-          if (typeof errors == "string") {
-            console.log(errors);
-          } else {
-            if (errors.response.data.errors) {
-              console.log(errors.response.data.errors);
-            }
-          }
-        });
-    },
-    changePage: function(page) {
-      this.pagination.current_page = page;
-      this.getListRoomsByPage(page);
-    },
-    isComfirmDeLete(callback) {
-      return new Promise(function(resolve, reject) {
-        swal(
-          {
-            title: "Are you sure?",
-            text: "You will not be able to recover this room!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel plx!",
-            closeOnConfirm: false
-          },
-          function(isConfirm) {
-            if (isConfirm) {
-              swal(
-                "Deleted!",
-                "This room has been deleted.",
-                "success"
-              );
-              resolve("delete success");
-            } else {
-              reject("canelled delete");
-            }
-          }
-        );
-      });
-    },
-    activeChange(element) {
-        const { value } = element
-        const roomId = element.srcEvent.target.parentElement.dataset.roomId;
-        this.axios
-            .post(apiUrl.SET_ROOM_ACTIVE_BY_ID.replace(':id', roomId), {active : value})
-            .then(response => {
-              console.log(response.data)
-            })
-            .catch(error => {
-              console.error(error.response);
-            });
     }
   },
   computed: {
-    isActived: function() {
-      return this.pagination.current_page;
+    isActived: function () {
+      return this.pagination.current_page
     },
-    pagesNumber: function() {
+    pagesNumber: function () {
       if (!this.pagination.to) {
-        return [];
+        return []
       }
-      let from = this.pagination.current_page - this.offset;
+      let from = this.pagination.current_page - this.offset
       if (from < 1) {
-        from = 1;
+        from = 1
       }
-      let to = from + this.offset * 2;
+      let to = from + this.offset * 2
       if (to >= this.pagination.last_page) {
-        to = this.pagination.last_page;
+        to = this.pagination.last_page
       }
-      let pagesArray = [];
+      const pagesArray = []
       while (from <= to) {
-        pagesArray.push(from);
-        from++;
+        pagesArray.push(from)
+        from++
       }
-      return pagesArray;
+      return pagesArray
+    }
+  },
+  created () {
+    this.getListRoomsByPage(1)
+  },
+  methods: {
+    getListRoomsByPage (numPage = 1) {
+      this.axios
+        .get(apiUrl.GET_ROOMS_BY_PAGE.replace(':page', numPage))
+        .then(response => {
+          this.list_rooms = response.data.rooms
+          this.pagination = response.data.pagination
+        })
+        .catch(error => {
+          console.error(error.response)
+        })
+    },
+    deleteRoom (room, index) {
+      this.isComfirmDeLete()
+        .then(res => {
+          return this.axios.delete(apiUrl.DELETE_ROOM_BY_ID.replace(':id', room.id))
+        })
+        .then(response => {
+          this.list_rooms.splice(index, 1)
+        })
+        .catch(errors => {
+          if (typeof errors === 'string') {
+            console.log(errors)
+          } else {
+            if (errors.response.data.errors) {
+              console.log(errors.response.data.errors)
+            }
+          }
+        })
+    },
+    changePage: function (page) {
+      this.pagination.current_page = page
+      this.getListRoomsByPage(page)
+    },
+    isComfirmDeLete (callback) {
+      return new Promise(function (resolve, reject) {
+        swal(
+          {
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this room!',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel plx!',
+            closeOnConfirm: false
+          },
+          function (isConfirm) {
+            if (isConfirm) {
+              swal(
+                'Deleted!',
+                'This room has been deleted.',
+                'success'
+              )
+              resolve('delete success')
+            } else {
+              reject('canelled delete')
+            }
+          }
+        )
+      })
+    },
+    activeChange (element) {
+      const { value } = element
+      const roomId = element.srcEvent.target.parentElement.dataset.roomId
+      this.axios
+        .post(apiUrl.SET_ROOM_ACTIVE_BY_ID.replace(':id', roomId), { active: value })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.error(error.response)
+        })
     }
   }
-};
+}
 </script>

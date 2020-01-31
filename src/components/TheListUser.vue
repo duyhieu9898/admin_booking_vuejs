@@ -7,9 +7,9 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">User</li>
         </ol>
@@ -37,51 +37,51 @@
                       </tr>
                     </thead>
                     <tbody v-if="getListUser.length">
-                      <tr v-for="(user, index) in getListUser" v-bind:key="user.id">
+                      <tr v-for="(user, index) in getListUser" :key="user.id">
                         <td>{{ user.id }}</td>
                         <td v-if="!user.isEdit">{{ user.name }}</td>
                         <td v-else>
                           <input
+                            v-model="user.name"
                             v-validate="'required|min:6|max:18'"
                             name="name"
                             type="text"
                             class="form-control"
-                            v-model="user.name"
                             :data-vv-scope="'user_'+ user.id"
-                          />
+                          >
                           <span class="errors">{{ errors.first(`user_${user.id}.name`) }}</span>
                         </td>
                         <td v-if="!user.isEdit">{{ user.email }}</td>
                         <td v-else>
                           <input
+                            v-model="user.email"
                             v-validate="'required|email'"
                             name="email"
                             type="text"
                             class="form-control"
-                            v-model="user.email"
                             :data-vv-scope="'user_'+ user.id"
-                          />
+                          >
                           <span class="errors">{{ errors.first(`user_${user.id}.email`) }}</span>
                         </td>
                         <td v-if="!user.isEdit">{{ user.phone }}</td>
                         <td v-else>
                           <input
+                            v-model="user.phone"
                             v-validate="'digits:10'"
                             name="phone"
                             class="form-control"
                             type="text"
-                            v-model="user.phone"
                             :data-vv-scope="'user_'+ user.id"
-                          />
+                          >
                           <span class="errors">{{ errors.first(`user_${user.id}.phone`) }}</span>
                         </td>
                         <td v-if="!user.isEdit">
-                          <span v-for="role in user.roles" v-bind:key="role.id">{{ role.name }}</span>
+                          <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
                         </td>
                         <td v-else>
                           <div v-if="user.roles.length">
-                            <div v-for="role in user.roles" v-bind:key="role.id">
-                              <select class="form-control" v-model="role.name">
+                            <div v-for="role in user.roles" :key="role.id">
+                              <select v-model="role.name" class="form-control">
                                 <option value="customer">Customer</option>
                                 <option value="owner">Owner</option>
                                 <option value="admin">Admin</option>
@@ -91,10 +91,10 @@
                         </td>
                         <td v-if="checkIsAdmin&&!user.isEdit">
                           <button class="btn btn-info" @click="user.isEdit = true">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <i class="fa fa-pencil" aria-hidden="true" />
                           </button>
                           <button class="btn btn-danger" @click="deleteUser({'userID':user.id, index})">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            <i class="fa fa-trash" aria-hidden="true" />
                           </button>
                         </td>
                         <td v-else-if="checkIsAdmin">
@@ -105,45 +105,45 @@
                     </tbody>
                   </table>
                 </div>
-                <div class="create-user" v-if="checkIsAdmin">
+                <div v-if="checkIsAdmin" class="create-user">
                   <div class="row">
                     <div class="col-md-3">
                       <input
+                        v-model="userCreate.name"
                         v-validate="'required|min:6|max:18'"
                         name="username_create"
                         type="text"
-                        v-model="userCreate.name"
                         class="form-control"
                         placeholder="Name..."
-                      />
+                      >
                       <span class="errors">{{ errors.first('username_create') }}</span>
                     </div>
                     <div class="col-md-3">
                       <input
+                        v-model="userCreate.email"
                         v-validate="'required|email'"
                         name="email_create"
                         type="email"
-                        v-model="userCreate.email"
                         class="form-control"
                         placeholder="User email..."
                         autocomplete="true"
-                      />
+                      >
                       <span class="errors">{{ errors.first('email_create') }}</span>
                     </div>
                     <div class="col-md-2">
                       <input
+                        v-model="userCreate.phone"
                         v-validate="'required|digits:10'"
                         name="phone_create"
                         type="tel"
-                        v-model="userCreate.phone"
                         class="form-control"
                         placeholder="User Phone..."
                         autocomplete="true"
-                      />
+                      >
                       <span class="errors">{{ errors.first('phone_create') }}</span>
                     </div>
                     <div class="col-md-2">
-                      <select class="form-control" v-model="userCreate.role">
+                      <select v-model="userCreate.role" class="form-control">
                         <option value="customer">Customer</option>
                         <option value="owner">Owner</option>
                         <option value="admin">Admin</option>
@@ -165,35 +165,42 @@
 </template>
 
 <script>
+/* global alertify */
 import { mapGetters, mapActions } from 'vuex'
-import apiUrl from '@/constants/apiUrl'
 
 export default {
-  data() {
+  data () {
     return {
       userCreate: {
         name: null,
         email: null,
         phone: null,
-        role: "customer"
-      },
-    };
+        role: 'customer'
+      }
+    }
   },
   computed: {
     ...mapGetters([
       'currentUser',
       'getListUser'
     ]),
-    checkIsAdmin() {
+    checkIsAdmin () {
+      let check = false
       if (this.currentUser.roles) {
-        let check = false;
         this.currentUser.roles.forEach(role => {
-          if (role.name === "admin") {
-            check = true;
+          if (role.name === 'admin') {
+            check = true
           }
-        });
-        return check;
+        })
       }
+      return check
+    }
+  },
+  watch: {
+    currentUser () {
+      setInterval(() => {
+        console.log('lenght', this.getListUser.length)
+      }, 1000)
     }
   },
   methods: {
@@ -202,44 +209,36 @@ export default {
       'callAPIUpdateUser',
       'deleteUser'
     ]),
-    resetFormUserCreate() {
-      this.$validator.reset();
+    resetFormUserCreate () {
+      this.$validator.reset()
       this.userCreate = {
         name: null,
         email: null,
         phone: null,
-        role: "customer"
-      };
+        role: 'customer'
+      }
     },
-    async callCreateUser() {
-      await this.$validator.validate();
+    async callCreateUser () {
+      await this.$validator.validate()
       if (this.errors.any()) {
-        alertify.notify("You must fix all errors in the form ", "error", 7);
-        return;
+        alertify.notify('You must fix all errors in the form ', 'error', 7)
+        return
       }
       this.createUser(this.userCreate)
     },
-    async callUpdateUser(user) {
+    async callUpdateUser (user) {
       try {
-        await this.$validator.validateAll("user-" + user.id);
+        await this.$validator.validateAll('user-' + user.id)
         if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7);
-          return;
+          alertify.notify('You must fix all errors in the form ', 'error', 7)
+          return
         }
         await this.callAPIUpdateUser(user)
         user.isEdit = false
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
-  },
-  watch: {
-    currentUser() {
-      setInterval(() => {
-        console.log('lenght', this.getListUser.length);
-      }, 1000);
-
-    }
-  },
-};
+  }
+}
 </script>

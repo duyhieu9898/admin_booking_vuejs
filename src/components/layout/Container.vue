@@ -1,10 +1,10 @@
 <template>
   <div class="page-container">
-    <sidebar-container/>
+    <sidebar-container />
     <!-- start page content -->
     <div class="page-content-wrapper">
       <transition name="fade-down" mode="out-in" appear>
-          <router-view></router-view>
+        <router-view />
       </transition>
     </div>
     <!-- end page content -->

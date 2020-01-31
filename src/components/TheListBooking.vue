@@ -7,9 +7,9 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">Booking</li>
         </ol>
@@ -31,17 +31,17 @@
                     class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer"
                   >
                     <div class="row">
-                    <div v-if="list_bookings.length == 0">
+                      <div v-if="list_bookings.length == 0">
                         <p>There are no booking</p>
-                    </div>
+                      </div>
                       <div
-                      v-else
+                        v-else
                         class="dataTables_scrollBody"
                         style="position: relative; overflow: auto; width: 100%;"
                       >
                         <table
-                          class="table table-hover table-checkable order-column full-width dataTable no-footer"
                           id="booking-table"
+                          class="table table-hover table-checkable order-column full-width dataTable no-footer"
                           role="grid"
                           aria-describedby="booking-table_info"
                           style="width: 1550px;"
@@ -78,11 +78,11 @@
                           <tbody>
                             <tr
                               v-for="(booking, index) in list_bookings"
-                              :key="booking.booking_id"
+                              :key="booking.bookingId"
                               class="gradeXlist_bookings even"
                               role="row"
                             >
-                              <td class="center">{{ booking.booking_id }}</td>
+                              <td class="center">{{ booking.bookingId }}</td>
                               <td class="center">{{ booking.user_id }}</td>
                               <td class="center">{{ booking.user_name }}</td>
                               <td class="center">{{ booking.user_phone }}</td>
@@ -99,16 +99,16 @@
                               </td>
                               <td class="center">
                                 <router-link
-                                  :to="{ name: 'booking',params: { id: booking.booking_id }}"
+                                  :to="{ name: 'booking',params: { id: booking.bookingId }}"
                                   class="btn btn-info"
                                 >
-                                  <i class="fa fa-pencil"></i>
+                                  <i class="fa fa-pencil" />
                                 </router-link>
                                 <button
                                   class="btn btn-danger"
-                                  @click="deleteBooking(booking.booking_id, index)"
+                                  @click="deleteBooking(booking.bookingId, index)"
                                 >
-                                  <i class="fa fa-trash-o"></i>
+                                  <i class="fa fa-trash-o" />
                                 </button>
                               </td>
                             </tr>
@@ -128,96 +128,97 @@
 </template>
 
 <script>
+/* global swal, Pusher */
 import apiUrl from '@/constants/apiUrl'
 
 export default {
-  data() {
+  data () {
     return {
       list_bookings: {}
-    };
+    }
   },
-  created() {
-    this.getListBooking();
-    let app=this;
-    //*realtime user pusher
+  created () {
+    this.getListBooking()
+    const app = this
+    //* realtime user pusher
     // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+    Pusher.logToConsole = true
 
     var pusher = new Pusher('e9e863659964b9b23e29', {
-        cluster: 'ap1',
-        encrypted: true
-    });
+      cluster: 'ap1',
+      encrypted: true
+    })
 
     // Subscribe to the channel we specified in our Laravel Event
-    var channel = pusher.subscribe('booking');
+    var channel = pusher.subscribe('booking')
 
     // Bind a function to a Event (the full Laravel class)
-    channel.bind('new-booking', function(data) {
-      console.log(data);
-      app.getListBooking();
-    });
+    channel.bind('new-booking', function (data) {
+      console.log(data)
+      app.getListBooking()
+    })
 
-    //*realtime user redis and socket
+    //* realtime user redis and socket
     // this.$socket.on('message', function (data) {
     //   console.log(data);
     //   app.getListBooking();
     // });
   },
   methods: {
-    getListBooking() {
+    getListBooking () {
       this.axios
         .get(apiUrl.GET_LIST_BOOKING)
         .then(response => {
-          this.list_bookings = response.data.booking;
+          this.list_bookings = response.data.booking
         })
         .catch(error => {
-          console.error(error.response);
-        });
+          console.error(error.response)
+        })
     },
-    deleteBooking(booking_id, index) {
-      this.isConfirmDelete(booking_id)
+    deleteBooking (bookingId, index) {
+      this.isConfirmDelete(bookingId)
         .then(res => {
-          return this.axios.delete(apiUrl.DETELE_BOOKING_BY_ID.replace(':id', booking_id));
+          return this.axios.delete(apiUrl.DETELE_BOOKING_BY_ID.replace(':id', bookingId))
         })
         .then(res => {
-          this.list_bookings.splice(index, 1);
+          this.list_bookings.splice(index, 1)
         })
         .catch(err => {
-          console.log(err.response);
-        });
+          console.log(err.response)
+        })
     },
-    setLableByStatus(status) {
-      if (status == "pending") {
-        return "label-info";
-      } else if (status == "completed") {
-        return "label-success";
+    setLableByStatus (status) {
+      if (status === 'pending') {
+        return 'label-info'
+      } else if (status === 'completed') {
+        return 'label-success'
       } else {
-        return "label-warning";
+        return 'label-warning'
       }
     },
-    isConfirmDelete(idBooking) {
-      return new Promise(function(resolve, reject) {
+    isConfirmDelete (idBooking) {
+      return new Promise(function (resolve, reject) {
         swal(
           {
-            title: "Are you sure?",
+            title: 'Are you sure?',
             text: `You will not be able to recover booking no ${idBooking}!`,
-            type: "warning",
+            type: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: `Yes, delete this booking!`,
-            cancelButtonText: "No, cancel",
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, delete this booking!',
+            cancelButtonText: 'No, cancel',
             closeOnConfirm: true
           },
-          function(isConfirm) {
+          function (isConfirm) {
             if (isConfirm) {
-              resolve("delete success");
+              resolve('delete success')
             } else {
-              reject("canelled delete");
+              reject('canelled delete')
             }
           }
-        );
-      });
+        )
+      })
     }
   }
-};
+}
 </script>

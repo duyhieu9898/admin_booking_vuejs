@@ -10,7 +10,7 @@
             <span class="info-box-text">Phòng</span>
             <span class="info-box-number">{{ datas.total_room }}</span>
             <div class="progress">
-              <div class="progress-bar width-60"></div>
+              <div class="progress-bar width-60" />
             </div>
             <span class="progress-description">Số phòng trong khách sạn</span>
           </div>
@@ -28,7 +28,7 @@
             <span class="info-box-text">Đặt phòng</span>
             <span class="info-box-number">{{ datas.total_booking }}</span>
             <div class="progress">
-              <div class="progress-bar width-40"></div>
+              <div class="progress-bar width-40" />
             </div>
             <span class="progress-description">Sô đơn đặt phòng trong tháng</span>
           </div>
@@ -46,7 +46,7 @@
             <span class="info-box-text">Người dùng</span>
             <span class="info-box-number">{{ datas.total_user }}</span>
             <div class="progress">
-              <div class="progress-bar width-80"></div>
+              <div class="progress-bar width-80" />
             </div>
             <span class="progress-description">Số người dùng</span>
           </div>
@@ -65,7 +65,7 @@
             <span class="info-box-number">{{ datas.total_earning_month }}</span>
             <span>VND</span>
             <div class="progress">
-              <div class="progress-bar width-60"></div>
+              <div class="progress-bar width-60" />
             </div>
             <span class="progress-description">Tổng thu nhập trong tháng</span>
           </div>
@@ -78,27 +78,27 @@
   </div>
 </template>
 <script>
-import apiUrl from "../../constants/apiUrl.js";
+import apiUrl from '../../constants/apiUrl.js'
 
 export default {
-  name: "StateOverview",
-  data: function() {
+  name: 'StateOverview',
+  data: function () {
     return {
       datas: {}
-    };
+    }
   },
-  created() {
-    this.getDataStatistical();
+  created () {
+    this.getDataStatistical()
   },
   methods: {
-    async getDataStatistical() {
+    async getDataStatistical () {
       try {
-        const { data } = await this.axios.get(apiUrl.GET_STATISTICAL);
-        this.datas = data;
+        const { data } = await this.axios.get(apiUrl.GET_STATISTICAL)
+        this.datas = data
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
   }
-};
+}
 </script>

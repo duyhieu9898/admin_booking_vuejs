@@ -6,7 +6,7 @@
       <div class="row header justify-content-center">
         <h1 class="header__content text-center text-danger">
           TODO LIST
-          <span class="badge badge-dark">{{numTask}}</span>
+          <span class="badge badge-dark">{{ numTask }}</span>
         </h1>
       </div>
       <!-- CONTENT -->
@@ -15,53 +15,53 @@
           <!-- Task input -->
           <div class="task__input input-group mb-3">
             <input
-              @keyup.enter="createTask()"
+              id
+              v-model="task"
               type="text"
               class="form-control"
-              v-model="task"
               name
-              id
               :placeholder="placeholder.taskInput"
-            />
+              @keyup.enter="createTask()"
+            >
             <!-- Task button -->
             <div class="input-group-append">
               <button
-                @click="createTask()"
                 class="btn btn-dark"
                 data-toggle="button"
                 aria-pressed="true"
                 type="button"
+                @click="createTask()"
               >
-                <span class="ion-plus-round" title="create" aria-hidden="true"></span>
+                <span class="ion-plus-round" title="create" aria-hidden="true" />
               </button>
-              <button @click="task=null" class="btn btn-danger" type="button">Clear</button>
+              <button class="btn btn-danger" type="button" @click="task=null">Clear</button>
             </div>
           </div>
           <!-- Task Todo -->
           <div class="task__list-todo mb-3">
             <h6>
               Task To-do
-              <span class="badge badge-secondary">{{task_todo}}</span>
+              <span class="badge badge-secondary">{{ task_todo }}</span>
             </h6>
-            <div class="task__list-group" v-if="listTask.length">
-              <ul class="list-group" v-for="(taskTodo, index) in listTask" :key="taskTodo._id">
-                <li class="list-group-item" v-if="!taskTodo.complete">
+            <div v-if="listTask.length" class="task__list-group">
+              <ul v-for="(taskTodo, index) in listTask" :key="taskTodo._id" class="list-group">
+                <li v-if="!taskTodo.complete" class="list-group-item">
                   <div class="row">
                     <!-- Task Todo content -->
                     <div class="task__content col-sm-9">
-                      <div class="row" v-if="!taskTodo.isEdit">
-                        <span class="align-middle col-sm-7">{{taskTodo.content}}</span>
+                      <div v-if="!taskTodo.isEdit" class="row">
+                        <span class="align-middle col-sm-7">{{ taskTodo.content }}</span>
                         <span
                           class="col-sm-5 d-flex text-nowrap justify-content-end date"
-                        >{{formatTimeZone(taskTodo.created_at)}}</span>
+                        >{{ formatTimeZone(taskTodo.created_at) }}</span>
                       </div>
                       <input
                         v-else
-                        @keyup.enter="updateTaskTodo(taskTodo)"
+                        v-model="taskTodo.content"
                         type="text"
                         class="form-control"
-                        v-model="taskTodo.content"
-                      />
+                        @keyup.enter="updateTaskTodo(taskTodo)"
+                      >
                     </div>
 
                     <!-- Task Todo content edit-->
@@ -70,35 +70,41 @@
                       class="task__action col-sm-3 btn-group justify-content-end"
                     >
                       <button
-                        @click="updateTaskCompleted(taskTodo)"
                         class="btn btn-outline-success"
                         type="button"
+                        @click="updateTaskCompleted(taskTodo)"
                       >
-                        <span class="ion-checkmark-round" title="tick completed" aria-hidden="true"></span>
+                        <span
+                          class="ion-checkmark-round"
+                          title="tick completed"
+                          aria-hidden="true"
+                        />
                       </button>
                       <button
-                        @click="taskTodo.isEdit = true"
                         class="btn btn-outline-primary"
                         type="button"
+                        @click="taskTodo.isEdit = true"
                       >
-                        <span class="ion-edit" title="edit" aria-hidden="true"></span>
+                        <span class="ion-edit" title="edit" aria-hidden="true" />
                       </button>
                       <button
-                        @click="deleteTaskTodo(taskTodo, index)"
                         class="btn btn-outline-danger"
                         type="button"
+                        @click="deleteTaskTodo(taskTodo, index)"
                       >
-                        <span class="ion-trash-b" title="trash" aria-hidden="true"></span>
+                        <span class="ion-trash-b" title="trash" aria-hidden="true" />
                       </button>
                     </div>
                     <!-- Task Todo button-->
                     <div v-else class="task__action col-sm-3 btn-group justify-content-end">
                       <button
-                        @click="updateTaskTodo(taskTodo)"
                         class="btn btn-dark"
                         type="button"
-                      >save</button>
-                      <button @click="getListTask()" class="btn btn-danger" type="button">cancel</button>
+                        @click="updateTaskTodo(taskTodo)"
+                      >
+                        save
+                      </button>
+                      <button class="btn btn-danger" type="button" @click="getListTask()">cancel</button>
                     </div>
                   </div>
                 </li>
@@ -109,33 +115,33 @@
           <div class="task__list-completed">
             <h6>
               Completed Tag
-              <span class="badge badge-success">{{task_completed}}</span>
+              <span class="badge badge-success">{{ task_completed }}</span>
             </h6>
-            <div class="task__list-group" v-if="listTask.length ">
+            <div v-if="listTask.length " class="task__list-group">
               <ul
-                class="list-group"
                 v-for="(taskCompleted, index) in listTask"
                 :key="taskCompleted._id"
+                class="list-group"
               >
-                <li class="list-group-item" v-if="taskCompleted.complete">
+                <li v-if="taskCompleted.complete" class="list-group-item">
                   <div class="row">
                     <!-- Task completed content-->
                     <div class="task__content col-sm-9">
                       <div class="row">
-                        <span class="col-sm-7 align-middle">{{taskCompleted.content}}</span>
+                        <span class="col-sm-7 align-middle">{{ taskCompleted.content }}</span>
                         <span
                           class="col-sm-5 d-flex text-nowrap justify-content-end date"
-                        >{{formatTimeZone(taskCompleted.updatedAt)}}</span>
+                        >{{ formatTimeZone(taskCompleted.updatedAt) }}</span>
                       </div>
                     </div>
                     <!-- Task completed button-->
                     <div class="task__action col-sm-3 btn-group justify-content-end">
                       <button
-                        @click="deleteTaskTodo(taskCompleted,index)"
                         class="btn btn-outline-danger"
                         type="button"
+                        @click="deleteTaskTodo(taskCompleted,index)"
                       >
-                        <span class="oi oi-trash" title="trash" aria-hidden="true"></span>
+                        <span class="oi oi-trash" title="trash" aria-hidden="true" />
                       </button>
                     </div>
                   </div>
@@ -149,118 +155,126 @@
   </div>
 </template>
 <script >
-import moment from "moment-timezone";
-import apiUrl from "../../constants/apiUrl";
+import moment from 'moment-timezone'
+import apiUrl from '../../constants/apiUrl'
 
 export default {
-  data() {
+  data () {
     return {
       task: null,
       placeholder: {
-        taskInput: "Add new task"
+        taskInput: 'Add new task'
       },
       listTask: [],
       task_todo: 0,
       task_completed: 0,
       isShow: false
-    };
-  },
-  created() {
-    this.getListTask();
-  },
-  methods: {
-    async createTask() {
-      if (this.checkRequiredContentTask && this.task !== null) {
-        try {
-          await this.axios.post(apiUrl.CREATE_TASK, { task: this.task });
-          this.getListTask();
-          this.task = null;
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    },
-    async getListTask() {
-      try {
-        const { data } = await this.axios.get(apiUrl.GET_TASK);
-        this.listTask = data;
-        this.listTask.forEach(taskTodo => {
-          this.$set(taskTodo, "isEdit", false);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    formatTimeZone(fulltime = null) {
-      let result = "";
-      if (fulltime) {
-        var date = moment(fulltime);
-        result = date.tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD HH:mm:ss");
-      } else {
-        result = moment().format("YYYY-MM-DD HH:mm:ss");
-      }
-      return result;
-    },
-    async updateTaskCompleted(taskTodo) {
-      try {
-        await this.axios.put(apiUrl.UPDATE_TASK_BY_ID.replace(":id", taskTodo._id), {
-          complete: taskTodo.complete
-        });
-        taskTodo.complete = true;
-        this.task_todo--;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async updateTaskTodo(taskTodo) {
-      try {
-        await this.axios.put(apiUrl.UPDATE_TASK_BY_ID.replace(":id", taskTodo._id), {
-          content: taskTodo.content
-        });
-        taskTodo.isEdit = false;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async deleteTaskTodo(taskTodo, index) {
-      try {
-        this.axios.delete(apiUrl.DETELE_TASK_BY_ID.replace(":id", taskTodo._id));
-      } catch (error) {
-        console.log(error);
-      }
     }
   },
   computed: {
-    numTask() {
-      return this.listTask.length;
+    numTask () {
+      return this.listTask.length
     }
   },
   watch: {
-    numTask() {
-      //when numTask chane then handle count task_todo and task_complete
-      let sum = 0;
-      for (let value of this.listTask) {
-        if (value.complete == false) sum++;
+    numTask () {
+      // when numTask chane then handle count task_todo and task_complete
+      let sum = 0
+      for (const value of this.listTask) {
+        if (value.complete === false) sum++
       }
-      this.task_todo = sum;
-      this.task_completed = this.numTask - this.task_todo;
+      this.task_todo = sum
+      this.task_completed = this.numTask - this.task_todo
     },
     task_todo: {
-      //when task_todo chane then handle count task_complete
-      handler: function() {
-        this.task_completed = this.numTask - this.task_todo;
+      // when task_todo chane then handle count task_complete
+      handler: function () {
+        this.task_completed = this.numTask - this.task_todo
       },
       deep: true
     },
     task_completed: {
-      //when task_complete chane then handle count task_todo
-      handler: function() {
-        this.task_todo = this.numTask - this.task_completed;
+      // when task_complete chane then handle count task_todo
+      handler: function () {
+        this.task_todo = this.numTask - this.task_completed
       },
       deep: true
     }
+  },
+  created () {
+    this.getListTask()
+  },
+  methods: {
+    async createTask () {
+      if (this.checkRequiredContentTask && this.task !== null) {
+        try {
+          await this.axios.post(apiUrl.CREATE_TASK, { task: this.task })
+          this.getListTask()
+          this.task = null
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    },
+    async getListTask () {
+      try {
+        const { data } = await this.axios.get(apiUrl.GET_TASK)
+        this.listTask = data
+        this.listTask.forEach(taskTodo => {
+          this.$set(taskTodo, 'isEdit', false)
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    formatTimeZone (fulltime = null) {
+      let result = ''
+      if (fulltime) {
+        var date = moment(fulltime)
+        result = date.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss')
+      } else {
+        result = moment().format('YYYY-MM-DD HH:mm:ss')
+      }
+      return result
+    },
+    async updateTaskCompleted (taskTodo) {
+      try {
+        await this.axios.put(
+          apiUrl.UPDATE_TASK_BY_ID.replace(':id', taskTodo._id),
+          {
+            complete: taskTodo.complete
+          }
+        )
+        taskTodo.complete = true
+        this.task_todo--
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async updateTaskTodo (taskTodo) {
+      try {
+        await this.axios.put(
+          apiUrl.UPDATE_TASK_BY_ID.replace(':id', taskTodo._id),
+          {
+            content: taskTodo.content
+          }
+        )
+        taskTodo.isEdit = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteTaskTodo (taskTodo, index) {
+      try {
+        this.axios.delete(
+          apiUrl.DETELE_TASK_BY_ID.replace(':id', taskTodo._id)
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
-};
+}
 </script>
 <style lang="css" >
 .errorMessage {

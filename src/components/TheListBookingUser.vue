@@ -7,9 +7,9 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <a class="parent-item" href="index.html">Home</a>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">Booking</li>
         </ol>
@@ -36,8 +36,8 @@
                         style="position: relative; overflow: auto; width: 100%;"
                       >
                         <table
-                          class="table table-hover table-checkable order-column full-width dataTable no-footer"
                           id="booking-table"
+                          class="table table-hover table-checkable order-column full-width dataTable no-footer"
                           role="grid"
                           aria-describedby="booking-table_info"
                           style="width: 1550px;"
@@ -108,10 +108,10 @@
                                   :to="{ name: 'userBooking-edit',params: { id: userBooking.user_id }}"
                                   class="btn btn-primary"
                                 >
-                                  <i class="fa fa-pencil"></i>
+                                  <i class="fa fa-pencil" />
                                 </router-link>
                                 <button class="btn btn-danger">
-                                  <i class="fa fa-trash-o"></i>
+                                  <i class="fa fa-trash-o" />
                                 </button>
                               </td>
                             </tr>
@@ -132,20 +132,20 @@
 
 <script>
 export default {
-  //check
-  data() {
+  // check
+  data () {
     return {
       listUserBookings: {}
     }
   },
-  created() {
+  created () {
     this.getListUserBooking()
   },
   methods: {
-    async getListUserBooking() {
+    async getListUserBooking () {
       try {
-        const response = await this.axios.get("api/users/bookings")
-         this.listUserBookings = response.data.userBooking
+        const response = await this.axios.get('api/users/bookings')
+        this.listUserBookings = response.data.userBooking
       } catch (error) {
         console.error(error.response)
       }

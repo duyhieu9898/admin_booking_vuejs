@@ -7,9 +7,9 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">conveniences</li>
         </ol>
@@ -29,17 +29,14 @@
                     <div class="row">
                       <div class="col-md-9">
                         <input
+                          v-model="convenientCreate.name"
                           v-validate="'required|min:6|max:36'"
                           name="convenient"
                           type="text"
-                          v-model="convenientCreate.name"
                           class="form-control"
                           placeholder="Name..."
-                        />
-                        <span
-
-                          class="errors"
-                        >{{ errors.first('convenient') }}</span>
+                        >
+                        <span class="errors">{{ errors.first('convenient') }}</span>
                       </div>
                       <div class="col-md-3">
                         <button class="btn btn-primary" @click="createConvenient">Create</button>
@@ -57,36 +54,34 @@
                       </tr>
                     </thead>
                     <tbody v-if="list_convenient.length">
-                      <tr v-for="(convenient, index) in list_convenient" v-bind:key="convenient.id">
+                      <tr v-for="(convenient, index) in list_convenient" :key="convenient.id">
                         <td>{{ convenient.id }}</td>
                         <td v-if="!convenient.isEdit">{{ convenient.name }}</td>
                         <td v-else>
                           <input
+                            v-model="convenient.name"
                             v-validate="'required|min:4|max:36'"
-                            v-bind:name="'convenient-' + convenient.id"
+                            :name="'convenient-' + convenient.id"
                             type="text"
                             class="form-control"
-                            v-model="convenient.name"
-                          />
-                          <span
-                            class="errors"
-                          >{{ errors.first('convenient-' + convenient.id) }}</span>
+                          >
+                          <span class="errors">{{ errors.first('convenient-' + convenient.id) }}</span>
                         </td>
 
                         <td v-if="!convenient.isEdit">
                           <button class="btn btn-info" @click="convenient.isEdit = true">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil" />
                           </button>
                           <button
                             class="btn btn-danger"
                             @click="deleteConvenient(convenient,index)"
                           >
-                            <i class="fa fa-trash-o"></i>
+                            <i class="fa fa-trash-o" />
                           </button>
                         </td>
                         <td v-else>
                           <button class="btn btn-primary" @click="updateConvenient(convenient)">Save</button>
-                          <button class="btn btn-danger" @click="convenient.isEdit = false ">Cancel</button>
+                          <button class="btn btn-danger" @click="convenient.isEdit = false">Cancel</button>
                         </td>
                       </tr>
                     </tbody>
@@ -102,11 +97,12 @@
 </template>
 
 <script>
+/* global alertify, swal */
 import apiUrl from '@/constants/apiUrl'
 
 export default {
   name: 'RoomConveniences',
-  data() {
+  data () {
     return {
       convenientCreate: {
         name: null
@@ -114,92 +110,112 @@ export default {
       list_convenient: []
     }
   },
-  created() {
+  created () {
     this.getListConvenient()
   },
   methods: {
-    async getListConvenient() {
+    async getListConvenient () {
       try {
         const { data } = await this.axios.get(apiUrl.GET_CONVENIENCES)
         this.list_convenient = data
         this.list_convenient.forEach(convenient => {
-          this.$set(convenient, "isEdit", false)
+          this.$set(convenient, 'isEdit', false)
         })
       } catch (error) {
         console.log(error.response)
       }
     },
-    async createConvenient() {
+    async createConvenient () {
       try {
         if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7)
+          alertify.notify('You must fix all errors in the form ', 'error', 7)
           return
         }
-        let responce = await this.axios.post(apiUrl.CREATE_CONVENIENCE, this.convenientCreate)
-        //update list convenient side client
+        const responce = await this.axios.post(
+          apiUrl.CREATE_CONVENIENCE,
+          this.convenientCreate
+        )
+        // update list convenient side client
         this.convenientCreate.id = responce.data.id
-        this.$set(this.convenientCreate, "isEdit", false)
+        this.$set(this.convenientCreate, 'isEdit', false)
         this.list_convenient.push(this.convenientCreate)
-        //send notify
-        alertify.notify(`CREATE convenient with id is "${this.convenientCreate.id}"` , "success", 7)
-        //reset form value
+        // send notify
+        alertify.notify(
+          `CREATE convenient with id is "${this.convenientCreate.id}"`,
+          'success',
+          7
+        )
+        // reset form value
         this.convenientCreate = {}
         this.$validator.reset()
       } catch (error) {
         console.log(error)
       }
     },
-    async updateConvenient(convenient) {
+    async updateConvenient (convenient) {
       try {
         if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7)
+          alertify.notify('You must fix all errors in the form ', 'error', 7)
           return
         }
-        await this.axios.put(apiUrl.UPDATE_CONVENIENCE_BY_ID.replace(':id', convenient.id), convenient)
-        //send notify
-        alertify.notify(`UPDATE convenient with id is "${convenient.id}"` , "success", 7)
+        await this.axios.put(
+          apiUrl.UPDATE_CONVENIENCE_BY_ID.replace(':id', convenient.id),
+          convenient
+        )
+        // send notify
+        alertify.notify(
+          `UPDATE convenient with id is "${convenient.id}"`,
+          'success',
+          7
+        )
         convenient.isEdit = false
       } catch (error) {
         console.log(error.response)
-        if(typeof error.response.data.errors == "object") {
-          alertify.notify(error.response.data.errors.name[0] , "error", 7)
+        if (typeof error.response.data.errors === 'object') {
+          alertify.notify(error.response.data.errors.name[0], 'error', 7)
         }
       }
       this.$validator.reset()
     },
-    async deleteConvenient(convenient, index) {
+    async deleteConvenient (convenient, index) {
       try {
         await this.isConfirmDelete(convenient.name)
-        await this.axios.delete(apiUrl.DELETE_CONVENIENCE_BY_ID.replace(':id', convenient.id))
+        await this.axios.delete(
+          apiUrl.DELETE_CONVENIENCE_BY_ID.replace(':id', convenient.id)
+        )
         this.list_convenient.splice(index, 1)
         this.$validator.reset()
-        alertify.notify(`DELETE convenient with name ${convenient.name}`, "warning", 7)
+        alertify.notify(
+          `DELETE convenient with name ${convenient.name}`,
+          'warning',
+          7
+        )
       } catch (error) {
-        if(error.response) {
+        if (error.response) {
           console.log(error.response)
         }
         console.log(error)
       }
     },
-    isConfirmDelete(nameconvenient) {
-      return new Promise(function(resolve, reject) {
+    isConfirmDelete (nameconvenient) {
+      return new Promise(function (resolve, reject) {
         swal(
           {
-            title: "Are you sure?",
+            title: 'Are you sure?',
             text:
-              "You will not be able to recover this convenient and conveniences in rooms of !",
-            type: "warning",
+              'You will not be able to recover this convenient and conveniences in rooms of !',
+            type: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
+            confirmButtonColor: '#DD6B55',
             confirmButtonText: `Yes, delete "${nameconvenient}"!`,
-            cancelButtonText: "No, cancel",
+            cancelButtonText: 'No, cancel',
             closeOnConfirm: true
           },
-          function(isConfirm) {
+          function (isConfirm) {
             if (isConfirm) {
-              resolve("delete success")
+              resolve('delete success')
             } else {
-              reject("canelled delete")
+              reject('canelled delete')
             }
           }
         )

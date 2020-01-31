@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const eslintFriendlyFormatter = require('eslint-friendly-formatter')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -31,6 +32,15 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        enforce: "pre",
+        test: /\.(js|vue)$/,
+        exclude: /node_modules/,
+        loader: "eslint-loader",
+        options: {
+          formatter: eslintFriendlyFormatter
+        }
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',

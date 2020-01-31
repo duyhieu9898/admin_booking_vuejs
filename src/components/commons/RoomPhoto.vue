@@ -9,11 +9,13 @@
           class="btn btn-primary"
           data-toggle="modal"
           data-target="#image--model__add"
-        >Add Images</button>
+        >
+          Add Images
+        </button>
         <!-- Modal -->
         <div
-          class="modal fade"
           id="image--model__add"
+          class="modal fade"
           tabindex="-1"
           role="dialog"
           aria-labelledby="modalLongTitle"
@@ -22,7 +24,7 @@
           <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Upload Room Photos</h5>
+                <h5 id="modalTitle" class="modal-title">Upload Room Photos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -33,7 +35,7 @@
                     <div class="dz-message">
                       <div class="dropIcon">
                         <i class="material-icons">cloud_upload</i>
-                        <input type="file" multiple style="display:none" />
+                        <input type="file" multiple style="display:none">
                       </div>
                       <h3>Drop files here or click to upload.</h3>
                     </div>
@@ -51,14 +53,14 @@
     <div class="card-body photo-view">
       <div class="row">
         <div
-          class="col-sm-4 text-sm-center"
           v-for="(image, index) in list_images"
-          v-bind:key="image.id"
+          :key="image.id"
+          class="col-sm-4 text-sm-center"
         >
           <div class="image-room">
-            <img :src="asset(image.file_name)" :alt="image.original_name" />
+            <img :src="asset(image.file_name)" :alt="image.original_name">
           </div>
-          <a @click="deleteImage(image.id, index)" class="image--remove">Remove</a>
+          <a class="image--remove" @click="deleteImage(image.id, index)">Remove</a>
         </div>
       </div>
     </div>
@@ -66,129 +68,133 @@
 </template>
 
 <script>
-import apiUrl from '../../constants/apiUrl';
+/* global $, Dropzone */
+import apiUrl from '../../constants/apiUrl'
 import { asset } from '@/utils/helper'
 
 export default {
   name: 'RoomPhoto',
   props: {
-    room_id: {
+    roomId: {
+      required: true,
       type: Number
     }
   },
-  data() {
+  data () {
     return {
       list_images: [],
       list_images_id: []
-    };
+    }
   },
-  created() {
-    this.getListImages();
+  created () {
+    this.getListImages()
   },
-  mounted() {
-    let urlPathUpload;
-    if (this.room_id) {
-      urlPathUpload =`${apiUrl. GET_IMAGES_BY_ROOM_ID.replace(':id', this.room_id)}?api_token=${this.$token}`;
+  mounted () {
+    let urlPathUpload
+    if (this.roomId) {
+      urlPathUpload = `${apiUrl.GET_IMAGES_BY_ROOM_ID.replace(':id', this.roomId)}?api_token=${this.$token}`
     } else {
       urlPathUpload = `${apiUrl.CREATE_IMAGE}?api_token=${this.$token}`
     }
     this.initDropzone(urlPathUpload)
   },
   methods: {
-    getListImages() {
-      if (this.room_id) {
+    getListImages () {
+      if (this.roomId) {
         this.axios
-          .get(apiUrl.GET_IMAGES_BY_ROOM_ID.replace(':id', this.room_id))
+          .get(apiUrl.GET_IMAGES_BY_ROOM_ID.replace(':id', this.roomId))
           .then(response => {
-            this.list_images = response.data;
+            this.list_images = response.data
           })
           .catch(err => {
-            console.error(err.response.data);
-          });
+            console.error(err.response.data)
+          })
       }
     },
-    async deleteImage(imageId, index) {
+    async deleteImage (imageId, index) {
       try {
         await this.axios.delete(apiUrl.DELETE_IMAGE_BY_ID.replace(':id', imageId))
-        this.list_images.splice(index, 1);
+        this.list_images.splice(index, 1)
       } catch (error) {
-        console.log(error.response.data);
+        console.log(error.response.data)
       }
     },
-    initDropzone(urlPathUpload) {
-      var vm = this;
+    initDropzone (urlPathUpload) {
+      var vm = this
+      let message
       // default method post
-      var myDropzone = new Dropzone("#id_dropzone", {
+      const myDropzone = new Dropzone('#id_dropzone', {
         url: urlPathUpload,
         parallelUploads: 100,
         maxFiles: 6,
         maxFilesize: 5,
-        acceptedFiles: ".jpeg,.jpg,.png,.gif",
-        dictRemoveFile: "Remove",
-        dictFileTooBig: "Image is bigger than 5MB",
-        paramName: "file",
+        acceptedFiles: '.jpeg,.jpg,.png,.gif',
+        dictRemoveFile: 'Remove',
+        dictFileTooBig: 'Image is bigger than 5MB',
+        paramName: 'file',
         // The setting up of the dropzone
-        error: function(file, response) {
-          if ($.type(response) === "string") {
-            //dropzone sends it's own error messages in string
-            var message = response;
+        error: function (file, response) {
+          if ($.type(response) === 'string') {
+            // dropzone sends it's own error messages in string
+            message = response
           } else {
-            var message = response.message;
+            message = response.message
           }
 
-          file.previewElement.classList.add("dz-error");
+          file.previewElement.classList.add('dz-error')
           var _ref = file.previewElement.querySelectorAll(
-            "[data-dz-errormessage]"
-          );
-          var _results = [];
+            '[data-dz-errormessage]'
+          )
+          var _results = []
 
           for (let _i = 0, _len = _ref.length; _i < _len; _i++) {
-            var node = _ref[_i];
-            _results.push((node.textContent = message));
+            var node = _ref[_i]
+            _results.push((node.textContent = message))
           }
 
-          return _results;
+          return _results
         },
-        success: function(file, response) {
+        success: function (file, response) {
           var html = `<div class="col-sm-4 text-sm-center " id="js-section-${response.image_id}">
                         <div class="image-room">
                             <img src="${file.dataURL}" alt="delete-booking.png">
                         </div>
                         <a class="js-remove-image image--remove" data-image-id="${response.image_id}">Remove</a>
-                    </div>`;
-          $(".photo-view > .row").append(html);
+                    </div>`
+          $('.photo-view > .row').append(html)
 
-          $(".js-remove-image").click(function(e) {
-            e.preventDefault();
-            var imageId = e.target.dataset.imageId;
+          $('.js-remove-image').click(function (e) {
+            e.preventDefault()
+            var imageId = e.target.dataset.imageId
             $.ajax({
-              type: "delete",
-              url: vm.$host_name_server + "/api/images/" + imageId,
+              type: 'delete',
+              url: vm.$host_name_server + '/api/images/' + imageId,
               headers: {
                 Authorization: `Bearer ${vm.$token}`
               },
-              success: function(res) {
-                $("#js-section-" + imageId).remove();
-                //console.log(res.message)
+              success: function (res) {
+                $('#js-section-' + imageId).remove()
+                // console.log(res.message)
               },
-              error: function(res) {
-                //console.log(res.responseJSON);
+              error: function (res) {
+                // console.log(res.responseJSON);
               }
-            });
-          });
+            })
+          })
 
-          vm.list_images_id.push(response.image_id);
-          vm.$emit("arr-images-id", vm.list_images_id);
+          vm.list_images_id.push(response.image_id)
+          vm.$emit('arr-images-id', vm.list_images_id)
         }
-      });
+      })
+      console.log(myDropzone)
     },
-    asset(fileName) {
-      console.log(fileName);
+    asset (fileName) {
+      console.log(fileName)
 
       return asset(fileName)
     }
   }
-};
+}
 </script>
 <style>
 .image--remove {
@@ -202,7 +208,7 @@ export default {
 .card__header--photo .car-body {
   min-height: 150px;
 }
-undefined .photo-room .card-body {
+.photo-room .card-body {
   min-height: 150px;
 }
 .photo-view {

@@ -7,9 +7,9 @@
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
           <li>
-            <i class="fa fa-home"></i>&nbsp;
+            <i class="fa fa-home" />&nbsp;
             <router-link :to="{ name: 'dash-board'}" class="title">Home</router-link>&nbsp;
-            <i class="fa fa-angle-right"></i>
+            <i class="fa fa-angle-right" />
           </li>
           <li class="active">basic-infomation</li>
         </ol>
@@ -34,29 +34,29 @@
                       </tr>
                     </thead>
                     <tbody v-if="listBasicInformation.length">
-                      <tr v-for="(basicInformation) in listBasicInformation" v-bind:key="basicInformation.id">
+                      <tr v-for="(basicInformation) in listBasicInformation" :key="basicInformation.id">
                         <td>{{ basicInformation.name }}</td>
                         <td v-if="!basicInformation.isEdit">{{ basicInformation.content }}</td>
                         <td v-else>
                           <input
+                            v-model="basicInformation.content"
                             v-validate="'required|min:4|max:100'"
-                            v-bind:name="'basicInformation-' + basicInformation.id"
+                            :name="'basicInformation-' + basicInformation.id"
                             type="text"
                             class="form-control"
-                            v-model="basicInformation.content"
-                          />
+                          >
                           <span
                             class="errors"
                           >{{ errors.first('basicInformation-' + basicInformation.id) }}</span>
                         </td>
                         <td v-if="!basicInformation.isEdit" class="item-flex-end">
                           <button class="btn btn-info" @click="basicInformation.isEdit = true">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil" />
                           </button>
                         </td>
                         <td v-else class="item-flex-end">
                           <button class="btn btn-primary" @click="updateBasicInformation(basicInformation)">Save</button>
-                          <button class="btn btn-danger" @click="basicInformation.isEdit = false ">Cancel</button>
+                          <button class="btn btn-danger" @click="basicInformation.isEdit = false">Cancel</button>
                         </td>
                       </tr>
                     </tbody>
@@ -72,44 +72,45 @@
 </template>
 
 <script>
+/* global alertify */
 import apiUrl from '@/constants/apiUrl'
 
 export default {
   name: 'RoomConveniences',
-  data() {
+  data () {
     return {
       listBasicInformation: []
     }
   },
-  created() {
+  created () {
     this.getListBasicInformation()
   },
   methods: {
-    async getListBasicInformation() {
+    async getListBasicInformation () {
       try {
         const { data } = await this.axios.get(apiUrl.GET_BASIC_INFORMATION)
         this.listBasicInformation = data
         this.listBasicInformation.forEach(basicInformation => {
-          this.$set(basicInformation, "isEdit", false)
+          this.$set(basicInformation, 'isEdit', false)
         })
       } catch (error) {
         console.log(error.response)
       }
     },
-    async updateBasicInformation(basicInformation) {
+    async updateBasicInformation (basicInformation) {
       try {
         if (this.errors.any()) {
-          alertify.notify("You must fix all errors in the form ", "error", 7)
+          alertify.notify('You must fix all errors in the form ', 'error', 7)
           return
         }
         await this.axios.put(apiUrl.UPDATE_BASIC_INFORMATION_BY_ID.replace(':id', basicInformation.id), basicInformation)
-        //send notify
-        alertify.notify(`UPDATE Basic Information with name is "${basicInformation.id}"` , "success", 7)
+        // send notify
+        alertify.notify(`UPDATE Basic Information with name is "${basicInformation.id}"`, 'success', 7)
         basicInformation.isEdit = false
       } catch (error) {
         console.log(error.response)
-        if(typeof error.response.data.errors == "object") {
-          alertify.notify(error.response.data.errors.name[0] , "error", 7)
+        if (typeof error.response.data.errors === 'object') {
+          alertify.notify(error.response.data.errors.name[0], 'error', 7)
         }
       }
       this.$validator.reset()

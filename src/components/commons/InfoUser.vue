@@ -10,13 +10,13 @@
           <p v-if="!isEdit">{{ currentUser.name }}</p>
           <div v-else class="col-lg-9">
             <input
+              v-model="currentUser.name"
               v-validate="'required|min:6|max:18'"
               type="text"
               class="form-control"
               placeholder="Enter email"
-              v-model="currentUser.name"
               name="username"
-            />
+            >
             <span v-show="errors.has('username')" class="errors">{{ errors.first('username') }}</span>
           </div>
         </div>
@@ -25,13 +25,13 @@
           <p v-if="!isEdit">{{ currentUser.email }}</p>
           <div v-else class="col-lg-9">
             <input
+              v-model="currentUser.email"
               v-validate="'required|email'"
               type="email"
               class="form-control"
               name="email"
               placeholder="Enter email"
-              v-model="currentUser.email"
-            />
+            >
             <span v-show="errors.has('email')" class="errors">{{ errors.first('email') }}</span>
           </div>
         </div>
@@ -40,13 +40,13 @@
           <p v-if="!isEdit">{{ currentUser.phone }}</p>
           <div v-else class="col-lg-9">
             <input
+              v-model="currentUser.phone"
               v-validate="'digits:10'"
               type="tel"
               class="form-control"
               name="phone"
               placeholder="Enter Phone"
-              v-model="currentUser.phone"
-            />
+            >
             <span v-show="errors.has('phone')" class="errors">{{ errors.first('phone') }}</span>
           </div>
         </div>
@@ -54,20 +54,20 @@
           <label class="control-label col-lg-3 text-right" for="tel">Address:</label>
           <div class="col-lg-9">
             <user-address
-              @address-id="getAddressId"
               :user_id="currentUser.id"
               :address_id="currentUser.address_id"
               :is_edit="isEdit"
-            ></user-address>
+              @address-id="getAddressId"
+            />
           </div>
         </div>
         <div class="form-group row">
           <div v-if="!isEdit" class="col-md-12">
-            <button @click="isEdit = true" type="submit" class="btn btn-success">Edit</button>
+            <button type="submit" class="btn btn-success" @click="isEdit = true">Edit</button>
           </div>
           <div v-else class="col-lg-8">
-            <button @click="updateUser(currentUser)" type="submit" class="btn btn-primary">Save info</button>
-            <button @click="isEdit = false" type="submit" class="btn btn-success">Canel</button>
+            <button type="submit" class="btn btn-primary" @click="updateUser(currentUser)">Save info</button>
+            <button type="submit" class="btn btn-success" @click="isEdit = false">Canel</button>
           </div>
         </div>
       </div>
@@ -76,63 +76,59 @@
 </template>
 
 <script>
-import userAddress from "@/components/commons/UserAddress";
-import apiUrl from "../../constants/apiUrl.js";
+/* global alertify */
+import userAddress from '@/components/commons/UserAddress'
 
 export default {
-  name: "InfoUser",
+  name: 'InfoUser',
   components: {
     userAddress
   },
-  data() {
+  data () {
     return {
       currentUser: {
-        name: "",
-        email: "",
-        phone: "",
+        name: '',
+        email: '',
+        phone: '',
         address_id: null
       },
       isEdit: false,
       counter: 0
-    };
+    }
   },
-  created() {
-    this.getCurrentUser();
+  created () {
+    this.getCurrentUser()
   },
   methods: {
-    getCurrentUser() {
+    getCurrentUser () {
       this.axios
-        .get("/getCurrentUser")
+        .get('/getCurrentUser')
         .then(response => {
-          this.currentUser = response.data;
-          this.checkEditUser;
+          this.currentUser = response.data
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
-    updateUser(user) {
-      console.log(user);
+    updateUser (user) {
+      console.log(user)
       this.axios
-        .put("/api/users/" + user.id, {
+        .put('/api/users/' + user.id, {
           user: user
         })
         .then(response => {
-          console.log(response.data);
-          this.isEdit = false;
-          alertify.notify(`UPDATE user with id: ${user.id}`, "success", 7);
+          console.log(response.data)
+          this.isEdit = false
+          alertify.notify(`UPDATE user with id: ${user.id}`, 'success', 7)
         })
         .catch(errors => {
-          console.log(errors.response);
-          if (errors.response.data.errors)
-            this.errors.name = errors.response.data.errors;
-        });
+          console.log(errors.response)
+          if (errors.response.data.errors) { this.errors.name = errors.response.data.errors }
+        })
     },
-    getAddressId(id) {
-      this.currentUser.address_id = id;
+    getAddressId (id) {
+      this.currentUser.address_id = id
     }
   }
-};
+}
 </script>
-
-
