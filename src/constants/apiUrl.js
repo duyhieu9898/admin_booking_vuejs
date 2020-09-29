@@ -23,7 +23,7 @@ export default {
   CREATE_USER: `${config.SERVER_ADDRESS}/api/users/`,
   UPDATE_USER_BY_ID: `${config.SERVER_ADDRESS}/api/users/:id`,
   DELETE_USER_BY_ID: `${config.SERVER_ADDRESS}/api/users/:id`,
-  // BO)KING
+  // BO0KING
   SEND_NOTIFICATION: `${config.SERVER_ADDRESS}/api/send-notification`,
   GET_LIST_BOOKING: `${config.SERVER_ADDRESS}/api/bookings`,
   GET_BOOKING_BY_ID: `${config.SERVER_ADDRESS}/api/bookings/:id`,
@@ -32,10 +32,10 @@ export default {
   GET_USERS_BOOKING: `${config.SERVER_ADDRESS}/api/users/list-booking`,
   UPDATE_STATUS_BOOKING_BY_ID: `${config.SERVER_ADDRESS}/api/bookings/:id/status-update/`,
   // TASK
-  GET_TASK: `${config.SERVER_ADDRESS}/api/task`,
-  CREATE_TASK: `${config.SERVER_ADDRESS}/api/task`,
-  UPDATE_TASK_BY_ID: `${config.SERVER_ADDRESS}/api/task/:id`,
-  DELETE_TASK_BY_ID: `${config.SERVER_ADDRESS}/api/task/:id`,
+  GET_TASK: `${config.SERVER_NODE_ADDRESS}/task`,
+  CREATE_TASK: `${config.SERVER_NODE_ADDRESS}/task`,
+  UPDATE_TASK_BY_ID: `${config.SERVER_NODE_ADDRESS}/task/:id`,
+  DELETE_TASK_BY_ID: `${config.SERVER_NODE_ADDRESS}/task/:id`,
   // CATEGORY
   GET_CATEGORIES: `${config.SERVER_ADDRESS}/api/categories`,
   CREATE_CATEGORY: `${config.SERVER_ADDRESS}/api/categories`,
