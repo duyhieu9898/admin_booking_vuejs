@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "ioredis": "^4.14.0",
     "laravel-echo": "^1.5.4",
-    "moment-timezone": "^0.5.26",
+    "moment-timezone": "^0.5.35",
     "pusher-js": "^5.0.1",
     "server-static": "^2.0.5",
     "socket.io": "^2.2.0",
